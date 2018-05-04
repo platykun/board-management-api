@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * 記録テーブル.
+ * 場所テーブル.
  */
 @Repository
 public interface PlaceRepository extends JpaRepository<PlaceEntity, String> {

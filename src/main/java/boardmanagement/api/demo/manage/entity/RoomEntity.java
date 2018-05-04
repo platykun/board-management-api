@@ -13,13 +13,13 @@ import javax.persistence.Table;
  * 記録テーブル.
  */
 @Entity
-@Table(name = "record")
+@Table(name = "room")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecordEntity {
+public class RoomEntity {
     /**
-     * ユーザID.
+     * ルームID.
      */
     @Id
     @GeneratedValue
@@ -29,6 +29,11 @@ public class RecordEntity {
      * ボードゲームタイトル.
      */
     private String boardTitle;
+
+    /**
+     * 場所名.
+     */
+    private String placeName;
 
     /**
      * プレイ人数.

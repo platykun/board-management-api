@@ -22,4 +22,9 @@ public class PlaceEntity {
      */
     @Id
     private String name;
+
+    /**
+     * URL.
+     */
+    private String url;
 }

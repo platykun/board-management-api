@@ -29,4 +29,9 @@ public class UserEntity {
      * ユーザ名.
      */
     private String name;
+
+    /**
+     * 権限.
+     */
+    private int authority;
 }

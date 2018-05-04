@@ -15,23 +15,31 @@ public class SampleService {
     BoardGameRepository boardGameRepository;
 
     @Autowired
+    JoinRoomRepository joinRoomRepository;
+
+    @Autowired
     PasswordRepository passwordRepository;
 
     @Autowired
     PlaceRepository placeRepository;
 
     @Autowired
-    RecordRepository recordRepository;
+    ResultRepository resultRepository;
 
     @Autowired
-    UserReposiotry userReposiotry;
+    RoomRepository roomRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public void callRepositorySample(){
         BoardGameEntity boardGameEntity = boardGameRepository.findByTitle("ボードゲーム0");
+        JoinRoomEntity joinRoomEntity = joinRoomRepository.findByUserIdAndRoomId(0, 0);
         PasswordEntity passwordEntity = passwordRepository.findById(0);
         PlaceEntity placeEntity = placeRepository.findByName("ボドゲショップ1");
-        RecordEntity recordEntity = recordRepository.findById(0);
-        UserEntity userEntity = userReposiotry.findById(0);
+        ResultEntity resultEntity = resultRepository.findByUserIdAndRoomId(0, 0);
+        RoomEntity roomEntity = roomRepository.findById(0);
+        UserEntity userEntity = userRepository.findById(0);
 
         System.out.println("test");
 

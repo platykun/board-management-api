@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * ユーザリポジトリ.
  */
 @Repository
-public interface UserReposiotry extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     UserEntity findById(int id);
 }
