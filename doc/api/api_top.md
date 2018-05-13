@@ -37,6 +37,9 @@ JSON形式でレスポンスを返します。
 
 * [PUT /user/{id}/create_room](user/user_id_create_room.md) - ルーム作成
 
+### Room
+
+* [GET /room/find_all/{page}](room/room_find_all_page.md) - ルーム作成
 
 ## 注意点
 
