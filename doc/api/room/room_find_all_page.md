@@ -26,7 +26,7 @@
     "id":1,
     "boardTitle":"ボードゲーム0",
     "placeName":"ボドゲショップ1",
-    "player":3,"remark":"備考"}
+    "player":3,"remark":"備考"
   }
 ]
 ```
