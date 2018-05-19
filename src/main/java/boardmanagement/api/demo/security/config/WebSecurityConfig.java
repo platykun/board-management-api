@@ -12,8 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static boardmanagement.api.demo.security.config.SecurityConstants.LOGIN_URL;
-import static boardmanagement.api.demo.security.config.SecurityConstants.SIGNUP_URL;
+import static boardmanagement.api.demo.security.config.SecurityConstants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -26,14 +25,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and().authorizeRequests()
-                .antMatchers("/room/**", SIGNUP_URL, LOGIN_URL).permitAll()
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), bCryptPasswordEncoder()))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .authorizeRequests()
+                .mvcMatchers("/room/**")
+                .hasAnyAuthority("USER")
+                .mvcMatchers("/admin/**")
+                .hasAnyAuthority("USER")
+//                .antMatchers("/room/**", SIGNUP_URL, LOGIN_URL).permitAll()
                 .anyRequest().authenticated()
                 .and().logout()
                 .and().csrf().disable()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), bCryptPasswordEncoder()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

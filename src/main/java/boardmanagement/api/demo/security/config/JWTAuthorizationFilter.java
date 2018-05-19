@@ -1,10 +1,15 @@
 package boardmanagement.api.demo.security.config;
 
+import boardmanagement.api.demo.manage.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,6 +31,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -50,16 +56,22 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
             // parse the token.
-            String user = Jwts.parser()
+            String[] subjects = Jwts.parser()
                     .setSigningKey(SECRET.getBytes())
                     .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                     .getBody()
-                    .getSubject();
+                    .getSubject().split(",");
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            if(subjects.length < 2) return null;
+
+            String principal = subjects[0];
+
+            ArrayList<SimpleGrantedAuthority> permitList = new ArrayList<>();
+            for(int i = 1; i<subjects.length; i++){
+                permitList.add(new SimpleGrantedAuthority(subjects[i]));
             }
-            return null;
+
+            return new UsernamePasswordAuthenticationToken(principal, null, permitList);
         }
         return null;
     }

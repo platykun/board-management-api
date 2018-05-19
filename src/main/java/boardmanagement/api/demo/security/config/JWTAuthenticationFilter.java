@@ -79,9 +79,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-        // loginIdからtokenを設定してヘッダにセットする
+        // ログイン情報と権限情報を取得してトークンに格納する.
+        StringBuffer authorities = new StringBuffer();
+        auth.getAuthorities().forEach(a -> {
+            authorities.append(",");
+            authorities.append(a.toString());
+        });
+
         String token = Jwts.builder()
-                .setSubject(((User)auth.getPrincipal()).getUsername()) // usernameだけを設定する
+                .setSubject(((User)auth.getPrincipal()).getUsername() + authorities.toString())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET.getBytes())
                 .compact();

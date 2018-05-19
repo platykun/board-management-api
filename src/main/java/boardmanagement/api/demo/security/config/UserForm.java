@@ -1,5 +1,6 @@
 package boardmanagement.api.demo.security.config;
 
+import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class UserForm {
     private String loginId;
+
     private String pass;
 
     // TODO: lombokで付与されずやむを得ず実装
