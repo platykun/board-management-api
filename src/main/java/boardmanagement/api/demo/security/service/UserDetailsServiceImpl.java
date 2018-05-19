@@ -29,6 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if("admin".equals(username)){
             Collection<GrantedAuthority> authorityList = new ArrayList<>();
+            authorityList.add(new SimpleGrantedAuthority("ADMIN"));
             authorityList.add(new SimpleGrantedAuthority("USER"));
             return new User(username, ENCRYPTED_PASSWORD, authorityList);
 //            return User.withUsername(username)
