@@ -1,16 +1,25 @@
 package boardmanagement.api.demo.manage.bean;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * ルーム登録時レスポンス返却用クラス.
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Room {
     /**
-     * ルームID
+     * ルームID.
      */
     private int id;
+
+    /**
+     * ルーム名.
+     */
+    private String roomName;
 
     /**
      * ボードゲームタイトル.

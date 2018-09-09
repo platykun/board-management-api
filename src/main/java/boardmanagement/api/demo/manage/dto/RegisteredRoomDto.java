@@ -8,9 +8,14 @@ import lombok.Data;
 @Data
 public class RegisteredRoomDto {
     /**
-     * ルームID
+     * ルームID.
      */
     private int id;
+
+    /**
+     * ルーム名.
+     */
+    private String roomName;
 
     /**
      * ボードゲームタイトル.

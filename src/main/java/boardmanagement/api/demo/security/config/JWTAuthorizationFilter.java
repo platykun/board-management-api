@@ -44,6 +44,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         // AuthorizationヘッダのBearer Prefixである場合
         UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
 
+
+
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }

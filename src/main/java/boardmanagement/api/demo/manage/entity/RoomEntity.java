@@ -26,6 +26,11 @@ public class RoomEntity {
     private int id;
 
     /**
+     * ルーム名.
+     */
+    private String roomName;
+
+    /**
      * ボードゲームタイトル.
      */
     private String boardTitle;

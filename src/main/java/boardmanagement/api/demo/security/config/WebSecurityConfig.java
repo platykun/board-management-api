@@ -12,6 +12,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import static boardmanagement.api.demo.security.config.SecurityConstants.LOGIN_URL;
+import static boardmanagement.api.demo.security.config.SecurityConstants.SIGNUP_URL;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -26,11 +29,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), bCryptPasswordEncoder()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .authorizeRequests()
-                .mvcMatchers("/room/**")
+                .mvcMatchers("/user/**")
                 .hasAnyAuthority("USER")
                 .mvcMatchers("/admin/**")
                 .hasAnyAuthority("ADMIN")
-//                .antMatchers("/room/**", SIGNUP_URL, LOGIN_URL).permitAll()
+                .antMatchers("/**", SIGNUP_URL, LOGIN_URL).permitAll()
                 .anyRequest().authenticated()
                 .and().logout()
                 .and().csrf().disable()

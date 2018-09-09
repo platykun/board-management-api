@@ -5,12 +5,11 @@ import boardmanagement.api.demo.manage.bean.Room;
 import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
 import boardmanagement.api.demo.manage.service.RoomService;
-import boardmanagement.api.demo.manage.service.SampleService;
-import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 /**
  * ユーザコントローラー
@@ -41,6 +40,19 @@ public class UserController {
         return room;
     }
 
+    /**
+     * ルームに参加する.
+     * @param id ユーザID
+     * @param roomId ルームID
+     * @return 参加後のルーム情報
+     */
+    @PutMapping(path="{id:^[a-z0-9]+$}/join/{roomId:^[a-z0-9]+$}")
+    Room joinRoom(@PathVariable String id,@PathVariable String roomId, Principal principal) {
+        // idのユーザをroomIdのルームへ登録させる.
+        System.out.println(principal.toString());
+        Room room = new Room(1, "ルーム名", "タイトル", "どこか", 2, "備考");
 
+        return room;
+    }
 }
 
