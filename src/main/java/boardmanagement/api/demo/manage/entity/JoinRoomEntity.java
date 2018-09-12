@@ -18,9 +18,15 @@ import java.io.Serializable;
 @IdClass(JoinRoomEntity.PK.class)
 public class JoinRoomEntity {
 
+    /**
+     * ユーザID.
+     */
     @Id
     private int userId;
 
+    /**
+     * 部屋ID.
+     */
     @Id
     private int roomId;
 

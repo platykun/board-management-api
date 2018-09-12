@@ -16,15 +16,40 @@ JSON形式でレスポンスを返します。
 
 正常な場合はHTTPステータスコード 200 OKを返します。
 
-エラーの場合はHTTPステータスコード 400 Bad Requestを返します。
+エラーの場合はHTTPステータスコード 400 Bad Request等を返します。
 
-エラーレスポンスの例(未定)
+エラーレスポンスの例  
 
 ```
 {
-  "error":"invalid_request",
-  "error_description":"アクセストークンが無効です。"
+  "type": "failure",
+  "errors": [
+    {
+      "message": "Sorry, that page does not exist",
+      "code": 34
+    }
+  ]
 }
+```
+
+### レスポンスコード設計
+
+レスポンスコードは下記を基準とする。
+[参考サイト](https://qiita.com/mserizawa/items/b833e407d89abd21ee72)
+```
+200 OK - GET, PUT, PATCH, DELETE リクエストが成功した場合に応答。もしくは、POST リクエストが結果的に何もリソースを作らなかった場合に応答。
+201 Created - POST リクエストがリソース作成に成功した場合に応答。なお、そのリソースへのリンクを Location ヘッダに含める必要がある。
+204 No Content - 成功したDELETE リクエストで、ボディを返したくない場合に応答
+304 Not Modified - HTTP キャッシュが有効な場合に応答
+400 Bad Request - パース不可能なリクエストボディが来た場合に応答
+401 Unauthorized - 認証がされていない、もしくは不正なトークンの場合に応答
+403 Forbidden - 認証はされているが、認可されていないリソースへのリクエストに応答
+404 Not Found - 存在しないリソースへのリクエストに応答
+405 Method Not Allowed - 認可されていないメソッドでのリクエストに応答
+410 Gone - 今は存在しないリソース（廃止されたAPIなど）で空要素を返す場合などに応答
+415 Unsupported Media Type - 対応していない MediaType が指定された場合に応答
+422 Unprocessable Entity - バリデーションエラーに対して応答
+429 Too Many Requests - 回数制限をオーバーしたリクエストに対して応答
 ```
 
 ## API

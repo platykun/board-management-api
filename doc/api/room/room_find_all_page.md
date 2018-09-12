@@ -1,8 +1,8 @@
-# PUT room/find_all/{page}
+# PUT roomBean/find_all/{page}
 
 ルームを検索
 
-## リクエストパラメーター
+## リクエストURL
 
 | Name         | Description                      |
 |--------------|----------------------------------|
@@ -10,7 +10,7 @@
 
 ## リクエストの例
 
-`GET http://localhost:8080/room/find_all/0`  
+`GET http://localhost:8080/roomBean/find_all/0`  
 
 ## レスポンスの例
 

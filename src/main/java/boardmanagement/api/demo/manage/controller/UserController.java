@@ -1,7 +1,7 @@
 package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.manage.bean.CreateRoomBean;
-import boardmanagement.api.demo.manage.bean.Room;
+import boardmanagement.api.demo.manage.bean.RoomBean;
 import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
 import boardmanagement.api.demo.manage.service.RoomService;
@@ -28,16 +28,16 @@ public class UserController {
      * @return 作成結果
      */
     @PutMapping(path="{id:^[a-z0-9]+$}/create_room")
-    Room createRoom(@RequestBody CreateRoomBean createRoomBean, @PathVariable String id){
+    RoomBean createRoom(@RequestBody CreateRoomBean createRoomBean, @PathVariable String id){
 
         RegisterRoomDto registerRoomDto = new RegisterRoomDto();
         BeanUtils.copyProperties(createRoomBean, registerRoomDto);
         RegisteredRoomDto registeredRoomDto = roomService.register(registerRoomDto);
 
-        Room room = new Room();
-        BeanUtils.copyProperties(registeredRoomDto, room);
+        RoomBean roomBean = new RoomBean();
+        BeanUtils.copyProperties(registeredRoomDto, roomBean);
 
-        return room;
+        return roomBean;
     }
 
     /**
@@ -47,12 +47,14 @@ public class UserController {
      * @return 参加後のルーム情報
      */
     @PutMapping(path="{id:^[a-z0-9]+$}/join/{roomId:^[a-z0-9]+$}")
-    Room joinRoom(@PathVariable String id,@PathVariable String roomId, Principal principal) {
+    RoomBean joinRoom(@PathVariable String id, @PathVariable String roomId, Principal principal) {
         // idのユーザをroomIdのルームへ登録させる.
         System.out.println(principal.toString());
-        Room room = new Room(1, "ルーム名", "タイトル", "どこか", 2, "備考");
+        RoomBean roomBean = new RoomBean(1, "ルーム名", "タイトル", "どこか", 2, "備考");
 
-        return room;
+        return roomBean;
     }
+
+
 }
 
