@@ -4,6 +4,7 @@ import boardmanagement.api.demo.manage.bean.RoomBean;
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
 import boardmanagement.api.demo.manage.service.RoomService;
+import lombok.NonNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,17 @@ import java.util.List;
 @RequestMapping("/room")
 public class RoomController {
 
-    @Autowired
+    /**
+     * ルームサービスクラス.
+     */
+    @NonNull
+    private final
     RoomService roomService;
+
+    @Autowired
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
+    }
 
     /**
      * ルームを検索する.
@@ -28,7 +38,7 @@ public class RoomController {
      * @return ルーム情報
      */
     @GetMapping("find_all/{page:^[a-z0-9]+$}")
-    public List<RoomBean> findAll(@PathVariable int page) {
+    public SuccessBean<List<RoomBean>> findAll(@PathVariable int page) {
         List<RegisteredRoomDto> registerdRoomDtoList = roomService.findAll(page);
 
         List<RoomBean> result = new ArrayList<>();
@@ -38,7 +48,7 @@ public class RoomController {
             result.add(roomBean);
         });
 
-        return (List<RoomBean>) new SuccessBean(result);
+        return new SuccessBean<>(result);
     }
 }
 

@@ -1,9 +1,13 @@
 package boardmanagement.api.demo.manage.controller;
 
+import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.manage.bean.CreateRoomBean;
+import boardmanagement.api.demo.manage.bean.JoinRoomBean;
 import boardmanagement.api.demo.manage.bean.RoomBean;
+import boardmanagement.api.demo.manage.dto.RegisterJoinRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
+import boardmanagement.api.demo.manage.service.JoinRoomService;
 import boardmanagement.api.demo.manage.service.RoomService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +23,22 @@ import java.security.Principal;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
+    /**
+     * ルームサービスクラス.
+     */
+    private final
     RoomService roomService;
+
+    /**
+     * ルーム参加サービスクラス.
+     */
+    private final JoinRoomService joinRoomService;
+
+    @Autowired
+    public UserController(RoomService roomService, JoinRoomService joinRoomService) {
+        this.roomService = roomService;
+        this.joinRoomService = joinRoomService;
+    }
 
     /**
      * ルームを作成する.
@@ -28,7 +46,7 @@ public class UserController {
      * @return 作成結果
      */
     @PutMapping(path="{id:^[a-z0-9]+$}/create_room")
-    RoomBean createRoom(@RequestBody CreateRoomBean createRoomBean, @PathVariable String id){
+    SuccessBean<RoomBean> createRoom(@RequestBody CreateRoomBean createRoomBean, @PathVariable String id){
 
         RegisterRoomDto registerRoomDto = new RegisterRoomDto();
         BeanUtils.copyProperties(createRoomBean, registerRoomDto);
@@ -37,7 +55,7 @@ public class UserController {
         RoomBean roomBean = new RoomBean();
         BeanUtils.copyProperties(registeredRoomDto, roomBean);
 
-        return roomBean;
+        return new SuccessBean<>(roomBean);
     }
 
     /**
@@ -47,14 +65,16 @@ public class UserController {
      * @return 参加後のルーム情報
      */
     @PutMapping(path="{id:^[a-z0-9]+$}/join/{roomId:^[a-z0-9]+$}")
-    RoomBean joinRoom(@PathVariable String id, @PathVariable String roomId, Principal principal) {
+    SuccessBean<JoinRoomBean> joinRoom(@PathVariable String id, @PathVariable String roomId, Principal principal) {
         // idのユーザをroomIdのルームへ登録させる.
-        System.out.println(principal.toString());
-        RoomBean roomBean = new RoomBean(1, "ルーム名", "タイトル", "どこか", 2, "備考");
+        int userIdNum = Integer.parseInt(id);
+        int roomIdNum = Integer.parseInt(roomId);
+        RegisterJoinRoomDto registerJoinRoomDto = new RegisterJoinRoomDto(userIdNum, roomIdNum, false);
 
-        return roomBean;
+        RegisterJoinRoomDto result = joinRoomService.register(registerJoinRoomDto);
+        JoinRoomBean joinRoomBean = new JoinRoomBean(result.getUserId(), result.getRoomId(), result.isOwner());
+
+        return new SuccessBean<>(joinRoomBean);
     }
-
-
 }
 
