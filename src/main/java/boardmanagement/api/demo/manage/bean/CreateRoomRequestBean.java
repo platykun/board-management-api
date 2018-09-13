@@ -6,7 +6,7 @@ import lombok.Data;
  * ルーム作成用Beanクラス.
  */
 @Data
-public class CreateRoomBean {
+public class CreateRoomRequestBean {
     /**
      * ボードゲームタイトル.
      */

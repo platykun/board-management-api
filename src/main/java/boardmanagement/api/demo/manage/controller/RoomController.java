@@ -1,6 +1,6 @@
 package boardmanagement.api.demo.manage.controller;
 
-import boardmanagement.api.demo.manage.bean.RoomBean;
+import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
 import boardmanagement.api.demo.manage.service.RoomService;
@@ -38,17 +38,10 @@ public class RoomController {
      * @return ルーム情報
      */
     @GetMapping("find_all/{page:^[a-z0-9]+$}")
-    public SuccessBean<List<RoomBean>> findAll(@PathVariable int page) {
-        List<RegisteredRoomDto> registerdRoomDtoList = roomService.findAll(page);
+    public SuccessBean<List<RoomEntityBean>> findAll(@PathVariable int page) {
+        List<RoomEntityBean> roomEntityBeanList = roomService.findAll(page);
 
-        List<RoomBean> result = new ArrayList<>();
-        registerdRoomDtoList.forEach(r -> {
-            RoomBean roomBean = new RoomBean();
-            BeanUtils.copyProperties(r, roomBean);
-            result.add(roomBean);
-        });
-
-        return new SuccessBean<>(result);
+        return new SuccessBean<>(roomEntityBeanList);
     }
 }
 

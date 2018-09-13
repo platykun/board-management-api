@@ -1,9 +1,9 @@
 package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.SuccessBean;
-import boardmanagement.api.demo.manage.bean.CreateRoomBean;
-import boardmanagement.api.demo.manage.bean.JoinRoomBean;
-import boardmanagement.api.demo.manage.bean.RoomBean;
+import boardmanagement.api.demo.manage.bean.CreateRoomRequestBean;
+import boardmanagement.api.demo.common.bean.entity.JoinRoomEntityBean;
+import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
 import boardmanagement.api.demo.manage.dto.RegisterJoinRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
@@ -42,20 +42,17 @@ public class UserController {
 
     /**
      * ルームを作成する.
-     * @param createRoomBean ルーム情報
+     * @param createRoomRequestBean ルーム情報
      * @return 作成結果
      */
     @PutMapping(path="{id:^[a-z0-9]+$}/create_room")
-    SuccessBean<RoomBean> createRoom(@RequestBody CreateRoomBean createRoomBean, @PathVariable String id){
+    SuccessBean<RoomEntityBean> createRoom(@RequestBody CreateRoomRequestBean createRoomRequestBean, @PathVariable String id){
 
         RegisterRoomDto registerRoomDto = new RegisterRoomDto();
-        BeanUtils.copyProperties(createRoomBean, registerRoomDto);
-        RegisteredRoomDto registeredRoomDto = roomService.register(registerRoomDto);
+        BeanUtils.copyProperties(createRoomRequestBean, registerRoomDto);
+        RoomEntityBean createdRoom = roomService.register(registerRoomDto);
 
-        RoomBean roomBean = new RoomBean();
-        BeanUtils.copyProperties(registeredRoomDto, roomBean);
-
-        return new SuccessBean<>(roomBean);
+        return new SuccessBean<>(createdRoom);
     }
 
     /**
@@ -65,16 +62,15 @@ public class UserController {
      * @return 参加後のルーム情報
      */
     @PutMapping(path="{id:^[a-z0-9]+$}/join/{roomId:^[a-z0-9]+$}")
-    SuccessBean<JoinRoomBean> joinRoom(@PathVariable String id, @PathVariable String roomId, Principal principal) {
+    SuccessBean<JoinRoomEntityBean> joinRoom(@PathVariable String id, @PathVariable String roomId, Principal principal) {
         // idのユーザをroomIdのルームへ登録させる.
         int userIdNum = Integer.parseInt(id);
         int roomIdNum = Integer.parseInt(roomId);
         RegisterJoinRoomDto registerJoinRoomDto = new RegisterJoinRoomDto(userIdNum, roomIdNum, false);
 
-        RegisterJoinRoomDto result = joinRoomService.register(registerJoinRoomDto);
-        JoinRoomBean joinRoomBean = new JoinRoomBean(result.getUserId(), result.getRoomId(), result.isOwner());
+        JoinRoomEntityBean result = joinRoomService.register(registerJoinRoomDto);
 
-        return new SuccessBean<>(joinRoomBean);
+        return new SuccessBean<>(result);
     }
 }
 

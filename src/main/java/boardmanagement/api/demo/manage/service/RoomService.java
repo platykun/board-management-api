@@ -1,5 +1,6 @@
 package boardmanagement.api.demo.manage.service;
 
+import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
 import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
 import boardmanagement.api.demo.manage.entity.RoomEntity;
@@ -29,15 +30,12 @@ public class RoomService {
      * @param dto ルーム情報
      * @return 登録済ルーム情報
      */
-    public RegisteredRoomDto register(RegisterRoomDto dto) {
+    public RoomEntityBean register(RegisterRoomDto dto) {
         RoomEntity roomEntity = new RoomEntity();
         BeanUtils.copyProperties(dto, roomEntity);
         RoomEntity registedRoom = roomRepository.save(roomEntity);
 
-        RegisteredRoomDto registeredRoomDto = new RegisteredRoomDto();
-        BeanUtils.copyProperties(registedRoom, registeredRoomDto);
-
-        return registeredRoomDto;
+        return new RoomEntityBean(registedRoom);
     }
 
     /**
@@ -45,16 +43,14 @@ public class RoomService {
      * @param page ページID
      * @return ルーム一覧
      */
-    public List<RegisteredRoomDto> findAll(int page) {
+    public List<RoomEntityBean> findAll(int page) {
         Pageable limit = PageRequest.of(page,FIND_LIMIT);
 
         Page<RoomEntity> roomEntityPage = roomRepository.findAll(limit);
 
-        List<RegisteredRoomDto> resultRooms = new ArrayList<>();
+        List<RoomEntityBean> resultRooms = new ArrayList<>();
         roomEntityPage.forEach(r -> {
-            RegisteredRoomDto dto = new RegisteredRoomDto();
-            BeanUtils.copyProperties(r, dto);
-            resultRooms.add(dto);
+            resultRooms.add(new RoomEntityBean(r));
         });
 
         return resultRooms;
