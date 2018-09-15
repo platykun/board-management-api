@@ -36,10 +36,9 @@ public class BoardGameEntityBean {
     /**
      * BeanクラスからEntityクラスへ変換する.
      *
-     * @param bean Beanクラス
      * @return Entityクラス
      */
-    public BoardGameEntity convertToEntity(BoardGameEntityBean bean) {
-        return new BoardGameEntity(bean.getTitle(), bean.getPlayer(), bean.getOverview());
+    public BoardGameEntity toEntity() {
+        return new BoardGameEntity(this.getTitle(), this.getPlayer(), this.getOverview());
     }
 }
