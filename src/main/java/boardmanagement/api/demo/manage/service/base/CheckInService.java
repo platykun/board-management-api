@@ -1,4 +1,4 @@
-package boardmanagement.api.demo.manage.service;
+package boardmanagement.api.demo.manage.service.base;
 
 import boardmanagement.api.demo.common.bean.entity.CheckInEntityBean;
 import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
@@ -38,6 +38,12 @@ public class CheckInService {
         CheckInEntity registerdEntity = checkInRepository.save(entity);
 
         return new CheckInEntityBean(registerdEntity);
+    }
+
+    public CheckInEntityBean findLatestCheckin(int userId) {
+//        CheckInEntity checkInEntity = checkInRepository.findByUserIdOrderById(userId);
+//        return new CheckInEntityBean(checkInEntity);
+        return null;
     }
 
 }

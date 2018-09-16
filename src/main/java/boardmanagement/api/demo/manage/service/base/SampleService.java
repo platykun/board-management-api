@@ -1,4 +1,4 @@
-package boardmanagement.api.demo.manage.service;
+package boardmanagement.api.demo.manage.service.base;
 
 import boardmanagement.api.demo.manage.entity.*;
 import boardmanagement.api.demo.manage.repository.*;

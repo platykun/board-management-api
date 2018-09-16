@@ -30,10 +30,9 @@ public class PlaceEntityBean {
     /**
      * BeanクラスからEntityクラスへ変換する.
      *
-     * @param bean Beanクラス
      * @return Entityクラス
      */
-    public PlaceEntity convertToEntity(PlaceEntityBean bean) {
-        return new PlaceEntity(bean.getName(), bean.getUrl());
+    public PlaceEntity toEntity() {
+        return new PlaceEntity(this.getName(), this.getUrl());
     }
 }

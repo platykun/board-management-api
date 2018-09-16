@@ -2,14 +2,11 @@ package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
 import boardmanagement.api.demo.common.bean.SuccessBean;
-import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
-import boardmanagement.api.demo.manage.service.RoomService;
+import boardmanagement.api.demo.manage.service.base.RoomService;
 import lombok.NonNull;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

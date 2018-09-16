@@ -1,13 +1,8 @@
-package boardmanagement.api.demo.manage.service;
+package boardmanagement.api.demo.manage.service.base;
 
 import boardmanagement.api.demo.common.bean.entity.BoardGameEntityBean;
-import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
-import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
 import boardmanagement.api.demo.manage.entity.BoardGameEntity;
-import boardmanagement.api.demo.manage.entity.RoomEntity;
 import boardmanagement.api.demo.manage.repository.BoardGameRepository;
-import boardmanagement.api.demo.manage.repository.RoomRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,12 +20,16 @@ public class BoardGameService {
     private static final int FIND_LIMIT = 100;
 
     @Autowired
-    BoardGameRepository boardGameRepository;
+    private BoardGameRepository boardGameRepository;
+
+    public BoardGameService(BoardGameRepository boardGameRepository) {
+        this.boardGameRepository = boardGameRepository;
+    }
 
     /**
      * ボードゲームを登録する.
      * @param boardGameEntityBean ボードゲーム登録情報
-     * @return 登録済ルーム情報
+     * @return 登録済ボードゲーム情報
      */
     public BoardGameEntityBean register(BoardGameEntityBean boardGameEntityBean) {
         BoardGameEntity entity = boardGameEntityBean.toEntity();
@@ -40,9 +39,9 @@ public class BoardGameService {
     }
 
     /**
-     * ルーム一覧を取得する.
+     * ボードゲーム一覧を取得する.
      * @param page ページID
-     * @return ルーム一覧
+     * @return ボードゲーム  一覧
      */
     public List<BoardGameEntityBean> findAll(int page) {
         Pageable limit = PageRequest.of(page,FIND_LIMIT);
