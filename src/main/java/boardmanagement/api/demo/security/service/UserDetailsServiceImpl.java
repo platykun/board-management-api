@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // 本来ならここでDBなどからユーザを検索することになるが、サンプルのためリストに含まれるかで判定している
+        // TODO: 本来ならここでDBなどからユーザを検索することになるが、サンプルのためリストに含まれるかで判定している
         if(!usernameList.contains(username)){
             throw new UsernameNotFoundException(username);
         }

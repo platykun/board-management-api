@@ -5,6 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpOutputMessage;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static boardmanagement.api.demo.security.config.SecurityConstants.*;
 
@@ -35,9 +40,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private AuthenticationManager authenticationManager;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    private MappingJackson2HttpMessageConverter httpMessageConverter;
+
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, BCryptPasswordEncoder bCryptPasswordEncoder, MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter) {
         this.authenticationManager = authenticationManager;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.httpMessageConverter = mappingJackson2HttpMessageConverter;
 
         // ログイン用のpathを変更する
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(LOGIN_URL, "POST"));
@@ -76,11 +84,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication auth) throws IOException, ServletException {
         // ログイン情報と権限情報を取得してトークンに格納する.
         StringBuffer authorities = new StringBuffer();
+        List<String> authList = new ArrayList<>();
         auth.getAuthorities().forEach(a -> {
             authorities.append(",");
             authorities.append(a.toString());
+            authList.add(a.toString());
         });
 
+        // TODO: リクエストヘッダーにトークンを埋め込まない場合、この処理は不要のため削除すること.
         String token = Jwts.builder()
                 .setSubject(((User)auth.getPrincipal()).getUsername() + authorities.toString())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -88,8 +99,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .compact();
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
 
+
+        HttpOutputMessage outputMessage = new ServletServerHttpResponse(res);
+        httpMessageConverter.write(new AuthenticationResult(TOKEN_PREFIX + token, authList), MediaType.APPLICATION_JSON_UTF8, outputMessage);
+
         // ここでレスポンスを組み立てると個別のパラメータを返せるがFilterの責務の範囲内で実施しなければならない
         // auth.getPrincipal()で取得できるUserDetailsは自分で作ったEntityクラスにもできるのでカスタム属性は追加可能
+    }
+
+    @lombok.Value
+    public static class AuthenticationResult {
+        private final String token;
+        private final List<String> authList;
     }
 
 
