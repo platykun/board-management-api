@@ -7,6 +7,12 @@ import lombok.Data;
  */
 @Data
 public class RegisterRoomDto {
+
+    /**
+     * ルーム名.
+     */
+    private String roomName;
+
     /**
      * ボードゲームタイトル.
      */

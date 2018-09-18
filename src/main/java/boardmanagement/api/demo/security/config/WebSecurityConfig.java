@@ -13,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static boardmanagement.api.demo.security.config.SecurityConstants.LOGIN_URL;
 import static boardmanagement.api.demo.security.config.SecurityConstants.SIGNUP_URL;
@@ -44,11 +46,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // xssProtectionを設定しない.セキュリティ強度を弱める設定のため、設定せずに済むのであれば設定しない
-        // http.headers().xssProtection().block(false);
+//         http.headers().xssProtection().block(false);
 
         // TODO: 思考停止で設定を入れる。要否は要検討
         // https://stackoverflow.com/questions/36968963/how-to-configure-cors-in-a-spring-boot-spring-security-application/37610988#37610988
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+//        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+        http.cors().configurationSource(corsConfigurationSource());
 
     }
 
@@ -63,6 +66,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * CORS設定
+     *
+     * @return CORS設定
+     */
+    private CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+        corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+        corsConfiguration.addAllowedOrigin("http://localhost:8080");
+        corsConfiguration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        corsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+
+        return corsConfigurationSource;
     }
 
 }
