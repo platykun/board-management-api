@@ -40,5 +40,13 @@ public class RoomController {
 
         return new SuccessBean<>(roomEntityBeanList);
     }
+
+
+    @GetMapping("find/{keyword}")
+    public SuccessBean<List<RoomEntityBean>> find(@PathVariable String keyword) {
+        List<RoomEntityBean> roomEntityBeanList = roomService.findByRoomName(keyword);
+
+        return new SuccessBean<>(roomEntityBeanList);
+    }
 }
 

@@ -27,6 +27,7 @@ public class RoomService {
 
     /**
      * ルームを登録する.
+     *
      * @param dto ルーム情報
      * @return 登録済ルーム情報
      */
@@ -40,18 +41,33 @@ public class RoomService {
 
     /**
      * ルーム一覧を取得する.
+     *
      * @param page ページID
      * @return ルーム一覧
      */
     public List<RoomEntityBean> findAll(int page) {
-        Pageable limit = PageRequest.of(page,FIND_LIMIT);
+        Pageable limit = PageRequest.of(page, FIND_LIMIT);
 
         Page<RoomEntity> roomEntityPage = roomRepository.findAll(limit);
 
         List<RoomEntityBean> resultRooms = new ArrayList<>();
-        roomEntityPage.forEach(r -> {
-            resultRooms.add(new RoomEntityBean(r));
-        });
+        roomEntityPage.forEach(r -> resultRooms.add(new RoomEntityBean(r)));
+
+        return resultRooms;
+    }
+
+    /**
+     * キーワードをもとにルームを検索する.
+     * @param keyword 検索キーワード
+     * @return 条件に合致するルームリスト
+     */
+    public List<RoomEntityBean> findByRoomName(String keyword) {
+        Pageable limit = PageRequest.of(0, FIND_LIMIT);
+
+        Page<RoomEntity> roomEntityPage = roomRepository.findByRoomName(keyword, limit);
+
+        List<RoomEntityBean> resultRooms = new ArrayList<>();
+        roomEntityPage.forEach(r -> resultRooms.add(new RoomEntityBean(r)));
 
         return resultRooms;
     }
