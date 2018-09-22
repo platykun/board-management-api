@@ -41,5 +41,17 @@ public class PlaceController {
         return new SuccessBean<>(placeEntityBeanList);
     }
 
+    /**
+     * キーワードに合致した場所を検索する.
+     * @param keyword キーワード
+     * @return 場所情報リスト
+     */
+    @GetMapping("find/{keyword}")
+    public SuccessBean<List<PlaceEntityBean>> find(@PathVariable String keyword) {
+        List<PlaceEntityBean> placeEntityBeanList = placeService.findByName(keyword);
+
+        return new SuccessBean<>(placeEntityBeanList);
+    }
+
 }
 

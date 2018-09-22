@@ -1,10 +1,7 @@
 package boardmanagement.api.demo.manage.service.base;
 
-import boardmanagement.api.demo.common.bean.entity.BoardGameEntityBean;
 import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
-import boardmanagement.api.demo.manage.entity.BoardGameEntity;
 import boardmanagement.api.demo.manage.entity.PlaceEntity;
-import boardmanagement.api.demo.manage.repository.BoardGameRepository;
 import boardmanagement.api.demo.manage.repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,6 +52,23 @@ public class PlaceService {
             placeEntityBeanList.add(new PlaceEntityBean(r));
         });
         return placeEntityBeanList;
+    }
+
+    /**
+     * キーワードをもとに場所を検索する.
+     * @param keyword 検索キーワード
+     * @return 条件に合致する場所リスト
+     */
+    public List<PlaceEntityBean> findByName(String keyword) {
+        Pageable limit = PageRequest.of(0, FIND_LIMIT);
+
+        Page<PlaceEntity> resultEntityPage;
+        resultEntityPage = placeRepository.findByName(keyword, limit);
+
+        List<PlaceEntityBean> resultPlaces = new ArrayList<>();
+        resultEntityPage.forEach(r -> resultPlaces.add(new PlaceEntityBean(r)));
+
+        return resultPlaces;
     }
 
 

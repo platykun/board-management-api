@@ -13,7 +13,6 @@ import org.springframework.data.repository.query.Param;
 public interface RoomRepository extends JpaRepository<RoomEntity, Integer> {
     RoomEntity findById(int id);
 
-    //  WHERE r.ROOM_NAME LIKE %:roomName% ORDER BY r.ID DESC
     @Query(value = "SELECT r FROM RoomEntity r WHERE r.roomName LIKE %:roomName% ORDER BY r.id DESC")
     Page<RoomEntity> findByRoomName(@Param("roomName") String roomName, Pageable pageable);
 }
