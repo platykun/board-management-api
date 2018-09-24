@@ -10,4 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     UserEntity findById(int id);
+
+    UserEntity findByName(String name);
+
+    int countByName(String name);
 }

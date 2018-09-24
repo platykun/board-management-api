@@ -1,5 +1,7 @@
 package boardmanagement.api.demo.security.service;
 
+import boardmanagement.api.demo.manage.service.base.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -9,25 +11,29 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+
+import static boardmanagement.api.demo.common.constants.AuthType.ADMIN;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private static List<String> usernameList = Arrays.asList("user", "admin");
+    @Autowired
+    UserService userService;
+
+    // TODO: パスワードを復号化して取得する仕組みが備わっていないため、修正が必要。
     private static String ENCRYPTED_PASSWORD = "$2a$10$5DF/j5hHnbeHyh85/0Bdzu1HV1KyJKZRt2GhpsfzQ8387A/9duSuq"; // "password"を暗号化した値
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // TODO: 本来ならここでDBなどからユーザを検索することになるが、サンプルのためリストに含まれるかで判定している
-        if(!usernameList.contains(username)){
+        if(userService.countByUserName(username)!= 1){
             throw new UsernameNotFoundException(username);
         }
 
-        if("admin".equals(username)){
+        int authority = userService.findByUserName(username).getAuthority();
+
+        if(ADMIN.ordinal() == authority){
             Collection<GrantedAuthority> authorityList = new ArrayList<>();
             authorityList.add(new SimpleGrantedAuthority("ADMIN"));
             authorityList.add(new SimpleGrantedAuthority("USER"));
@@ -49,5 +55,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     }
-
 }
