@@ -3,6 +3,7 @@ package boardmanagement.api.demo.manage.service.base;
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
 import boardmanagement.api.demo.manage.entity.UserEntity;
 import boardmanagement.api.demo.manage.repository.UserRepository;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,8 +16,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private static final int FIND_LIMIT = 100;
 
+    @NonNull
+    private final UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /**
      * セッション情報からログインユーザを取得する.
@@ -48,5 +54,16 @@ public class UserService {
      */
     public int countByUserName(String name) {
         return userRepository.countByName(name);
+    }
+
+    /**
+     * ユーザIDからユーザ情報を取得する.
+     * @param userId ユーザID
+     * @return ユーザ情報
+     */
+    public UserEntityBean findByUserId(int userId) {
+        UserEntity userEntity = userRepository.findById(userId);
+
+        return new UserEntityBean(userEntity);
     }
 }

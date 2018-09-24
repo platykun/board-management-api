@@ -8,6 +8,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * ルーム参加サービスクラス.
  */
@@ -36,5 +39,23 @@ public class JoinRoomService {
         JoinRoomEntity savedEntity = joinRoomRepository.save(joinRoomEntity);
 
         return new JoinRoomEntityBean(savedEntity);
+    }
+
+
+    /** ルームIDから参加情報を取得する */
+    public List<JoinRoomEntityBean> findJoiningUser(int roomId) {
+        List<JoinRoomEntity> result = joinRoomRepository.findByRoomId(roomId);
+
+        return result.stream().map(JoinRoomEntityBean::new).collect(Collectors.toList());
+    }
+
+    /**
+     * 最新のルーム参加情報を取得する.
+     * @return 最新のルーム情報
+     */
+    public JoinRoomEntityBean findLatestJoinRoomByUserId(int userId) {
+        // TODO: 最新情報を取得するロジックが必要.
+        List<JoinRoomEntity> joinRoomEntities = joinRoomRepository.findByUserId(userId);
+        return new JoinRoomEntityBean(joinRoomEntities.get(0));
     }
 }

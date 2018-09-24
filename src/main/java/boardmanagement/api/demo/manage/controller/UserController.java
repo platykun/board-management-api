@@ -7,8 +7,11 @@ import boardmanagement.api.demo.manage.bean.CreateRoomRequestBean;
 import boardmanagement.api.demo.common.bean.entity.JoinRoomEntityBean;
 import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
 import boardmanagement.api.demo.manage.bean.ResultRequestBean;
+import boardmanagement.api.demo.manage.bean.StatusResponseBean;
 import boardmanagement.api.demo.manage.dto.RegisterJoinRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
+import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
+import boardmanagement.api.demo.manage.service.UserStatusService;
 import boardmanagement.api.demo.manage.service.base.CheckInService;
 import boardmanagement.api.demo.manage.service.base.JoinRoomService;
 import boardmanagement.api.demo.manage.service.base.ResultService;
@@ -45,17 +48,22 @@ public class UserController {
     private final
     ResultService resultService;
 
+    private final
+    UserStatusService userStatusService;
+
     /**
      * ルーム参加サービスクラス.
      */
     private final JoinRoomService joinRoomService;
 
     @Autowired
-    public UserController(RoomService roomService, JoinRoomService joinRoomService, CheckInService checkInService, ResultService resultService) {
+    public UserController(RoomService roomService, JoinRoomService joinRoomService, CheckInService checkInService, ResultService resultService,
+                          UserStatusService userStatusService) {
         this.roomService = roomService;
         this.joinRoomService = joinRoomService;
         this.checkInService = checkInService;
         this.resultService = resultService;
+        this.userStatusService = userStatusService;
     }
 
     /**
@@ -118,6 +126,12 @@ public class UserController {
         ResultEntityBean bean = resultService.register(resultRequestBean.toResultDto());
 
         return new SuccessBean<>(bean);
+    }
+
+    @GetMapping(path="status")
+    SuccessBean<StatusResponseBean> status(Principal principal){
+        UserStatusResponseDto dto = userStatusService.getLoginUserStatus();
+        return new SuccessBean<>(new StatusResponseBean(dto));
     }
 
 }

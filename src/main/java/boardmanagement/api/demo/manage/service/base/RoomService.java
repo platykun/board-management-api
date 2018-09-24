@@ -72,5 +72,13 @@ public class RoomService {
         return resultRooms;
     }
 
-
+    /**
+     * ルームIDからルーム情報を取得する.
+     * @param roomId ルームID
+     * @return ルーム情報
+     */
+    public RoomEntityBean findById(int roomId) {
+        RoomEntity roomEntity = roomRepository.findById(roomId);
+        return new RoomEntityBean(roomEntity);
+    }
 }
