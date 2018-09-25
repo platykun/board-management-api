@@ -1,7 +1,6 @@
 package boardmanagement.api.demo.common.bean.entity;
 
 import boardmanagement.api.demo.manage.entity.CheckInEntity;
-import boardmanagement.api.demo.manage.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,7 @@ public class CheckInEntityBean {
     /**
      * 場所ID.
      */
-    private int placeId;
+    private String placeName;
 
     /**
      * タイムスタンプ.
@@ -43,7 +42,7 @@ public class CheckInEntityBean {
     public CheckInEntityBean(CheckInEntity entity) {
         this.id = entity.getId();
         this.userId = entity.getUserId();
-        this.placeId = entity.getPlaceId();
+        this.placeName = entity.getPlaceName();
         this.timestamp = entity.getTimestamp();
         this.checkedOut = entity.isCheckedOut();
     }
@@ -54,6 +53,6 @@ public class CheckInEntityBean {
      * @return Entityクラス
      */
     public CheckInEntity toEntity() {
-        return new CheckInEntity(this.getId(), this.getUserId(), this.getPlaceId(), this.getTimestamp(), this.isCheckedOut());
+        return new CheckInEntity(this.getId(), this.getUserId(), this.getPlaceName(), this.getTimestamp(), this.isCheckedOut());
     }
 }

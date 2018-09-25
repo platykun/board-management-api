@@ -32,9 +32,9 @@ public class CheckInEntity {
     private int userId;
 
     /**
-     * 場所ID.
+     * 場所名.
      */
-    private int placeId;
+    private String placeName;
 
     /**
      * タイムスタンプ.

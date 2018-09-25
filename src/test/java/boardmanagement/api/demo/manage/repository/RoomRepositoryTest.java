@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -36,10 +37,11 @@ public class RoomRepositoryTest {
 
     @Test
     public void findByRoomNameで部分一致した値を取得できること() throws Exception {
-        testEntityManager.persist(new RoomEntity(0, "後方一致_abcdefg", "boardTitle", "placeName", 1, "remark"));
-        testEntityManager.persist(new RoomEntity(0, "部分一致_defghij", "boardTitle", "placeName", 1, "remark"));
-        testEntityManager.persist(new RoomEntity(0, "efg前方一致_dhij", "boardTitle", "placeName", 1, "remark"));
-        testEntityManager.persist(new RoomEntity(0, "一致無し_klmnopq", "boardTitle", "placeName", 1, "remark"));
+        Date date = new Date();
+        testEntityManager.persist(new RoomEntity(0, "後方一致_abcdefg", "boardTitle", "placeName", 1, "remark", date));
+        testEntityManager.persist(new RoomEntity(0, "部分一致_defghij", "boardTitle", "placeName", 1, "remark", date));
+        testEntityManager.persist(new RoomEntity(0, "efg前方一致_dhij", "boardTitle", "placeName", 1, "remark", date));
+        testEntityManager.persist(new RoomEntity(0, "一致無し_klmnopq", "boardTitle", "placeName", 1, "remark", date));
 
 
         Pageable limit = PageRequest.of(0, 100);
@@ -47,9 +49,9 @@ public class RoomRepositoryTest {
 
 
         assertThat(actual.size(), is(3));
-        assertRoomEntity(actual.get(0), new RoomEntity(3, "efg前方一致_dhij", "boardTitle", "placeName", 1, "remark"));
-        assertRoomEntity(actual.get(1), new RoomEntity(2, "部分一致_defghij", "boardTitle", "placeName", 1, "remark"));
-        assertRoomEntity(actual.get(2), new RoomEntity(1, "後方一致_abcdefg", "boardTitle", "placeName", 1, "remark"));
+        assertRoomEntity(actual.get(0), new RoomEntity(3, "efg前方一致_dhij", "boardTitle", "placeName", 1, "remark", date));
+        assertRoomEntity(actual.get(1), new RoomEntity(2, "部分一致_defghij", "boardTitle", "placeName", 1, "remark",date));
+        assertRoomEntity(actual.get(2), new RoomEntity(1, "後方一致_abcdefg", "boardTitle", "placeName", 1, "remark", date));
     }
 
     /**
@@ -65,6 +67,7 @@ public class RoomRepositoryTest {
         assertThat(actual.getPlaceName(), is(expected.getPlaceName()));
         assertThat(actual.getPlayer(), is(expected.getPlayer()));
         assertThat(actual.getRemark(), is(expected.getRemark()));
+        assertThat(actual.getCreate(), is(expected.getCreate()));
     }
 
 }

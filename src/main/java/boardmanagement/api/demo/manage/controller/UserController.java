@@ -1,21 +1,15 @@
 package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.SuccessBean;
-import boardmanagement.api.demo.common.bean.entity.CheckInEntityBean;
-import boardmanagement.api.demo.common.bean.entity.ResultEntityBean;
+import boardmanagement.api.demo.common.bean.entity.*;
 import boardmanagement.api.demo.manage.bean.CreateRoomRequestBean;
-import boardmanagement.api.demo.common.bean.entity.JoinRoomEntityBean;
-import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
 import boardmanagement.api.demo.manage.bean.ResultRequestBean;
 import boardmanagement.api.demo.manage.bean.StatusResponseBean;
 import boardmanagement.api.demo.manage.dto.RegisterJoinRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.service.UserStatusService;
-import boardmanagement.api.demo.manage.service.base.CheckInService;
-import boardmanagement.api.demo.manage.service.base.JoinRoomService;
-import boardmanagement.api.demo.manage.service.base.ResultService;
-import boardmanagement.api.demo.manage.service.base.RoomService;
+import boardmanagement.api.demo.manage.service.base.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +23,9 @@ import java.security.Principal;
 @CrossOrigin
 @RequestMapping("/user")
 public class UserController {
+
+    private final
+    UserService userService;
 
     /**
      * ルームサービスクラス.
@@ -57,8 +54,9 @@ public class UserController {
     private final JoinRoomService joinRoomService;
 
     @Autowired
-    public UserController(RoomService roomService, JoinRoomService joinRoomService, CheckInService checkInService, ResultService resultService,
+    public UserController(UserService userService, RoomService roomService, JoinRoomService joinRoomService, CheckInService checkInService, ResultService resultService,
                           UserStatusService userStatusService) {
+        this.userService = userService;
         this.roomService = roomService;
         this.joinRoomService = joinRoomService;
         this.checkInService = checkInService;
@@ -71,8 +69,8 @@ public class UserController {
      * @param createRoomRequestBean ルーム情報
      * @return 作成結果
      */
-    @PutMapping(path="{id:^[a-z0-9]+$}/create_room")
-    SuccessBean<RoomEntityBean> createRoom(@RequestBody CreateRoomRequestBean createRoomRequestBean, @PathVariable String id){
+    @PutMapping(path="create_room")
+    SuccessBean<RoomEntityBean> createRoom(@RequestBody CreateRoomRequestBean createRoomRequestBean){
 
         RegisterRoomDto registerRoomDto = new RegisterRoomDto();
         BeanUtils.copyProperties(createRoomRequestBean, registerRoomDto);
@@ -83,14 +81,13 @@ public class UserController {
 
     /**
      * ルームに参加する.
-     * @param id ユーザID
      * @param roomId ルームID
      * @return 参加後のルーム情報
      */
-    @PutMapping(path="{id:^[a-z0-9]+$}/join/{roomId:^[a-z0-9]+$}")
-    SuccessBean<JoinRoomEntityBean> joinRoom(@PathVariable String id, @PathVariable String roomId, Principal principal) {
+    @PutMapping("join/{roomId:^[a-z0-9]+$}")
+    SuccessBean<JoinRoomEntityBean> joinRoom(@PathVariable String roomId, Principal principal) {
         // idのユーザをroomIdのルームへ登録させる.
-        int userIdNum = Integer.parseInt(id);
+        int userIdNum = userService.getLoginUser().getId();
         int roomIdNum = Integer.parseInt(roomId);
         RegisterJoinRoomDto registerJoinRoomDto = new RegisterJoinRoomDto(userIdNum, roomIdNum, false);
 
@@ -102,13 +99,14 @@ public class UserController {
     /**
      * チェックインする.
      *
-     * @param id ユーザID
-     * @param placeId 場所ID
+     * @param placeName 場所名
      * @return チェックイン済情報
      */
-    @PutMapping(path="{id:^[a-z0-9]+$}/checkin/{placeId:^[a-z0-9]+$}")
-    SuccessBean<CheckInEntityBean> checkin(@PathVariable int id, @PathVariable int placeId, Principal principal){
-        CheckInEntityBean registerdBean = checkInService.register(id, placeId);
+    @PutMapping(path="checkin/{placeName}")
+    SuccessBean<CheckInEntityBean> checkin(@PathVariable String placeName){
+        UserEntityBean loginUser = userService.getLoginUser();
+
+        CheckInEntityBean registerdBean = checkInService.register(loginUser.getId(), placeName);
 
         return new SuccessBean<>(registerdBean);
     }
@@ -116,12 +114,11 @@ public class UserController {
     /**
      * 結果を記録する.
      *
-     * @param id ユーザID
      * @param resultRequestBean 結果登録情報
      * @return 登録結果
      */
-    @PutMapping(path="{id:^[a-z0-9]+$}/result")
-    SuccessBean<ResultEntityBean> result(@PathVariable int id, @RequestBody ResultRequestBean resultRequestBean){
+    @PutMapping(path="result")
+    SuccessBean<ResultEntityBean> result(@RequestBody ResultRequestBean resultRequestBean){
 
         ResultEntityBean bean = resultService.register(resultRequestBean.toResultDto());
 
@@ -129,7 +126,7 @@ public class UserController {
     }
 
     @GetMapping(path="status")
-    SuccessBean<StatusResponseBean> status(Principal principal){
+    SuccessBean<StatusResponseBean> status(){
         UserStatusResponseDto dto = userStatusService.getLoginUserStatus();
         return new SuccessBean<>(new StatusResponseBean(dto));
     }

@@ -1,6 +1,8 @@
 package boardmanagement.api.demo.manage.repository;
 
 import boardmanagement.api.demo.manage.entity.JoinRoomEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,5 +15,5 @@ public interface JoinRoomRepository extends JpaRepository<JoinRoomEntity, Intege
 
     List<JoinRoomEntity> findByRoomId(int roomId);
 
-    List<JoinRoomEntity> findByUserId(int userId);
+    Page<JoinRoomEntity> findByUserIdOrderByJoinDateDesc(Pageable page, int userId);
 }

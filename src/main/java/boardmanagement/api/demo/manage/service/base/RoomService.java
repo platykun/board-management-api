@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +35,7 @@ public class RoomService {
     public RoomEntityBean register(RegisterRoomDto dto) {
         RoomEntity roomEntity = new RoomEntity();
         BeanUtils.copyProperties(dto, roomEntity);
+        roomEntity.setCreate(new Date());
         RoomEntity registedRoom = roomRepository.save(roomEntity);
 
         return new RoomEntityBean(registedRoom);

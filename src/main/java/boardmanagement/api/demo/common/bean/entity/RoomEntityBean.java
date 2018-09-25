@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * ルーム登録時レスポンス返却用クラス.
  */
@@ -38,6 +40,11 @@ public class RoomEntityBean {
     private int player;
 
     /**
+     * 作成日
+     */
+    private Date create;
+
+    /**
      * 備考.
      */
     private String remark;
@@ -49,6 +56,7 @@ public class RoomEntityBean {
         this.placeName = entity.getPlaceName();
         this.player = entity.getPlayer();
         this.remark = entity.getRemark();
+        this.create = entity.getCreate();
     }
 
     /**
@@ -59,6 +67,6 @@ public class RoomEntityBean {
      */
     public RoomEntity convertToEntity(RoomEntityBean bean) {
         return new RoomEntity(bean.getId(), bean.getRoomName(), bean.getBoardTitle(),
-                bean.getPlaceName(), bean.getPlayer(), bean.getRemark());
+                bean.getPlaceName(), bean.getPlayer(), bean.getRemark(), bean.getCreate());
     }
 }

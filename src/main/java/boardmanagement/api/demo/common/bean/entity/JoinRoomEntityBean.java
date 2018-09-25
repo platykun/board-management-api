@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * ルーム参加beanクラス.
  */
@@ -27,10 +29,13 @@ public class JoinRoomEntityBean {
      */
     private boolean owner;
 
+    private Date joinDate;
+
     public JoinRoomEntityBean(JoinRoomEntity entity) {
         this.userId = entity.getUserId();
         this.roomId = entity.getRoomId();
         this.owner = entity.isOwner();
+        this.joinDate = entity.getJoinDate();
     }
 
     /**
@@ -40,6 +45,6 @@ public class JoinRoomEntityBean {
      * @return Entityクラス
      */
     public JoinRoomEntity convertToEntity(JoinRoomEntityBean bean) {
-        return new JoinRoomEntity(bean.getUserId(), bean.getRoomId(), bean.isOwner());
+        return new JoinRoomEntity(bean.getUserId(), bean.getRoomId(), bean.isOwner(), bean.getJoinDate());
     }
 }

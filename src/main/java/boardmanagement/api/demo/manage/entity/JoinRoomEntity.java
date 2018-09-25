@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 参加テーブル.
@@ -34,6 +35,11 @@ public class JoinRoomEntity {
      * ルーム作成者かどうか
      */
     private boolean owner;
+
+    /**
+     * 参加時間
+     */
+    private Date joinDate;
 
     /**
      * 主キー定義

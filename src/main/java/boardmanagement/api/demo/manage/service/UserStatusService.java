@@ -44,8 +44,9 @@ public class UserStatusService {
 
         UserEntityBean loginUserBean = userService.getLoginUser();
 
-        // ログイン者のチェックイン情報.
+        // ログイン者のチェックイン情報.取得できなかった場合、空文字を返却する.
         CheckInEntityBean checkInEntityBean = checkInService.findLatestCheckin(loginUserBean.getId());
+        String placeName = checkInEntityBean != null ? checkInEntityBean.getPlaceName() : "";
         // ログイン者の参加情報.
         JoinRoomEntityBean joiningRoom = joinRoomService.findLatestJoinRoomByUserId(loginUserBean.getId());
         RoomEntityBean room = roomService.findById(joiningRoom.getRoomId());
@@ -55,7 +56,7 @@ public class UserStatusService {
         List<String> joiningUserList = joiningJoinRoom.stream().map(j -> userService.findByUserId(j.getUserId()).getName()).collect(Collectors.toList());
 
         return new UserStatusResponseDto(
-                "placeName",// TODO: 正しく取得できていない.
+                placeName,
                 room.getRoomName(),
                 room.getBoardTitle(),
                 room.getPlayer(),
