@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * チェックインサービスクラス.
@@ -39,10 +40,16 @@ public class CheckInService {
      * @param userId ユーザID
      * @return 最新のチェックイン情報
      */
-    public CheckInEntityBean findLatestCheckin(int userId) {
+    public Optional<CheckInEntityBean> findLatestCheckin(int userId) {
         Pageable limit = PageRequest.of(0, 1);
         Page<CheckInEntity> checkInEntity = checkInRepository.findByUserIdOrderByTimestampDesc(limit, userId);
-        return new CheckInEntityBean(checkInEntity.getContent().get(0));
+
+        if(!checkInEntity.hasContent()){
+            return Optional.empty();
+        }
+
+        CheckInEntity checkInInfoEntity = checkInEntity.getContent().get(0);
+        return Optional.of(new CheckInEntityBean(checkInInfoEntity));
     }
 
 }

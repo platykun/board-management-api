@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -38,30 +39,45 @@ public class UserStatusService {
 
     /**
      * ログインユーザのステータス情報を取得する.
+     *
      * @return ログインユーザのステータス情報
      */
     public UserStatusResponseDto getLoginUserStatus() {
 
-        UserEntityBean loginUserBean = userService.getLoginUser();
+        // ユーザが見つからなかった場合Optionalでexceptionが送出される
+        UserEntityBean loginUserBean = userService.getLoginUser().get();
 
         // ログイン者のチェックイン情報.取得できなかった場合、空文字を返却する.
-        CheckInEntityBean checkInEntityBean = checkInService.findLatestCheckin(loginUserBean.getId());
-        String placeName = checkInEntityBean != null ? checkInEntityBean.getPlaceName() : "";
+        Optional<CheckInEntityBean> checkInEntityBean = checkInService.findLatestCheckin(loginUserBean.getId());
+        String placeName = checkInEntityBean.map(CheckInEntityBean::getPlaceName).orElse("");
         // ログイン者の参加情報.
         JoinRoomEntityBean joiningRoom = joinRoomService.findLatestJoinRoomByUserId(loginUserBean.getId());
-        RoomEntityBean room = roomService.findById(joiningRoom.getRoomId());
+        Optional<RoomEntityBean> room = roomService.findById(joiningRoom.getRoomId());
+
+        String roomName = "";
+        String boardTitle = "";
+        int player = 0;
+        String remark = "";
+        if (room.isPresent()) {
+            RoomEntityBean r = room.get();
+            roomName = r.getRoomName();
+            boardTitle = r.getBoardTitle();
+            player = r.getPlayer();
+            remark = r.getRemark();
+        }
 
         // チェックインで参加しているユーザ一覧
         List<JoinRoomEntityBean> joiningJoinRoom = joinRoomService.findJoiningUser(joiningRoom.getRoomId());
-        List<String> joiningUserList = joiningJoinRoom.stream().map(j -> userService.findByUserId(j.getUserId()).getName()).collect(Collectors.toList());
+        List<String> joiningUserList = joiningJoinRoom.stream().map(
+                j -> userService.findByUserId(j.getUserId()).map(UserEntityBean::getName).orElse("")).collect(Collectors.toList());
 
         return new UserStatusResponseDto(
                 placeName,
-                room.getRoomName(),
-                room.getBoardTitle(),
-                room.getPlayer(),
-                room.getRemark(),
+                roomName,
+                boardTitle,
+                player,
+                remark,
                 joiningUserList
-                );
+        );
     }
 }

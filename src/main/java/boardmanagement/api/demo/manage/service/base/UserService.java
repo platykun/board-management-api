@@ -9,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * ルームサービスクラス.
  */
@@ -28,13 +30,11 @@ public class UserService {
      * セッション情報からログインユーザを取得する.
      * @return ログインユーザ
      */
-    public UserEntityBean getLoginUser() {
+    public Optional<UserEntityBean> getLoginUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = (String) authentication.getPrincipal();
 
-        UserEntity loginUserEntity = userRepository.findByName(userName);
-
-        return new UserEntityBean(loginUserEntity);
+        return  userRepository.findByName(userName).map(UserEntityBean::new);
     }
 
     /**
@@ -42,10 +42,8 @@ public class UserService {
      * @param userName ユーザ名
      * @return ユーザ情報
      */
-    public UserEntityBean findByUserName(String userName) {
-        UserEntity loginUserEntity = userRepository.findByName(userName);
-
-        return new UserEntityBean(loginUserEntity);
+    public Optional<UserEntityBean> findByUserName(String userName) {
+        return userRepository.findByName(userName).map(UserEntityBean::new);
     }
 
     /**
@@ -61,9 +59,7 @@ public class UserService {
      * @param userId ユーザID
      * @return ユーザ情報
      */
-    public UserEntityBean findByUserId(int userId) {
-        UserEntity userEntity = userRepository.findById(userId);
-
-        return new UserEntityBean(userEntity);
+    public Optional<UserEntityBean> findByUserId(int userId) {
+        return userRepository.findById(userId).map(UserEntityBean::new);
     }
 }

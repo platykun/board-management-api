@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
 
-        int authority = userService.findByUserName(username).getAuthority();
+        int authority = userService.findByUserName(username).get().getAuthority();
 
         if(ADMIN.ordinal() == authority){
             Collection<GrantedAuthority> authorityList = new ArrayList<>();

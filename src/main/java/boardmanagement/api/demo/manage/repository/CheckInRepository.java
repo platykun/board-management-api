@@ -7,13 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * チェックインリポジトリ.
  */
 @Repository
 public interface CheckInRepository extends JpaRepository<CheckInEntity, Integer> {
-    CheckInEntity findById(int id);
+    Optional<CheckInEntity> findById(int id);
 
     List<CheckInEntity> findByUserIdOrderByIdDesc(Pageable var1, int userId);
 

@@ -10,11 +10,12 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Optional;
 
 /**
  * パスワードテーブル.
  */
 @Repository
 public interface PasswordRepository extends JpaRepository<PasswordEntity, Integer> {
-    PasswordEntity findById(int id);
+    Optional<PasswordEntity> findById(int id);
 }

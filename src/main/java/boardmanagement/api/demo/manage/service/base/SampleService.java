@@ -33,13 +33,14 @@ public class SampleService {
     UserRepository userRepository;
 
     public void callRepositorySample(){
-        BoardGameEntity boardGameEntity = boardGameRepository.findByTitle("ボードゲーム0");
-        JoinRoomEntity joinRoomEntity = joinRoomRepository.findByUserIdAndRoomId(0, 0);
-        PasswordEntity passwordEntity = passwordRepository.findById(0);
-        PlaceEntity placeEntity = placeRepository.findByName("ボドゲショップ1");
-        ResultEntity resultEntity = resultRepository.findByUserIdAndRoomId(0, 0);
-        RoomEntity roomEntity = roomRepository.findById(0);
-        UserEntity userEntity = userRepository.findById(0);
+//        BoardGameEntity boardGameEntity = boardGameRepository.findByTitle("ボードゲーム0");
+//        JoinRoomEntity joinRoomEntity = joinRoomRepository.findByUserIdAndRoomId(0, 0);
+//        PasswordEntity passwordEntity = passwordRepository.findById(0);
+//        // optionalの仮実装
+//        PlaceEntity placeEntity = placeRepository.findByName("ボドゲショップ1").orElse(null);
+//        ResultEntity resultEntity = resultRepository.findByUserIdAndRoomId(0, 0);
+//        RoomEntity roomEntity = roomRepository.findById(0);
+//        UserEntity userEntity = userRepository.findById(0);
 
         System.out.println("test");
 

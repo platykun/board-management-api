@@ -7,6 +7,7 @@ import boardmanagement.api.demo.manage.bean.ResultRequestBean;
 import boardmanagement.api.demo.manage.bean.StatusResponseBean;
 import boardmanagement.api.demo.manage.dto.RegisterJoinRoomDto;
 import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
+import boardmanagement.api.demo.manage.dto.ResultDto;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.service.UserStatusService;
 import boardmanagement.api.demo.manage.service.base.*;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Optional;
 
 /**
  * ユーザコントローラー
@@ -87,7 +89,12 @@ public class UserController {
     @PutMapping("join/{roomId:^[a-z0-9]+$}")
     SuccessBean<JoinRoomEntityBean> joinRoom(@PathVariable String roomId, Principal principal) {
         // idのユーザをroomIdのルームへ登録させる.
-        int userIdNum = userService.getLoginUser().getId();
+        Optional<UserEntityBean> loginUser = userService.getLoginUser();
+        if(!loginUser.isPresent()){
+            throw new IllegalArgumentException("no login user");
+        }
+
+        int userIdNum = loginUser.get().getId();
         int roomIdNum = Integer.parseInt(roomId);
         RegisterJoinRoomDto registerJoinRoomDto = new RegisterJoinRoomDto(userIdNum, roomIdNum, false);
 
@@ -104,9 +111,12 @@ public class UserController {
      */
     @PutMapping(path="checkin/{placeName}")
     SuccessBean<CheckInEntityBean> checkin(@PathVariable String placeName){
-        UserEntityBean loginUser = userService.getLoginUser();
+        Optional<UserEntityBean> loginUser = userService.getLoginUser();
+        if(!loginUser.isPresent()){
+            throw new IllegalArgumentException("no login user");
+        }
 
-        CheckInEntityBean registerdBean = checkInService.register(loginUser.getId(), placeName);
+        CheckInEntityBean registerdBean = checkInService.register(loginUser.get().getId(), placeName);
 
         return new SuccessBean<>(registerdBean);
     }
@@ -119,8 +129,16 @@ public class UserController {
      */
     @PutMapping(path="result")
     SuccessBean<ResultEntityBean> result(@RequestBody ResultRequestBean resultRequestBean){
+        Optional<UserEntityBean> loginUser = userService.getLoginUser();
+        if(!loginUser.isPresent()){
+            throw new IllegalArgumentException("no login user");
+        }
 
-        ResultEntityBean bean = resultService.register(resultRequestBean.toResultDto());
+        // TODO: ログインユーザ情報を取得してDtoに詰める作業はServiceの責務にする
+        ResultDto resultDto = resultRequestBean.toResultDto();
+        resultDto.setUserId(loginUser.get().getId());
+
+        ResultEntityBean bean = resultService.register(resultDto);
 
         return new SuccessBean<>(bean);
     }

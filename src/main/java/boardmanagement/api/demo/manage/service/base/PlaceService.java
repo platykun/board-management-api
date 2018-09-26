@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 場所サービスクラス.
@@ -47,11 +48,10 @@ public class PlaceService {
         Pageable limit = PageRequest.of(page,FIND_LIMIT);
         Page<PlaceEntity> placeEntityPage = placeRepository.findAll(limit);
 
-        List<PlaceEntityBean> placeEntityBeanList = new ArrayList<>();
-        placeEntityPage.forEach(r -> {
-            placeEntityBeanList.add(new PlaceEntityBean(r));
-        });
-        return placeEntityBeanList;
+//        List<PlaceEntityBean> placeEntityBeanList = new ArrayList<>();
+//        placeEntityPage.forEach(r -> placeEntityBeanList.add(new PlaceEntityBean(r)));
+        return placeEntityPage.stream().map(PlaceEntityBean::new).collect(Collectors.toList());
+//        return placeEntityBeanList;
     }
 
     /**

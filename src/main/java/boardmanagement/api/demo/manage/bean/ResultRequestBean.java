@@ -9,11 +9,6 @@ import lombok.Data;
 @Data
 public class ResultRequestBean {
     /**
-     * ユーザID.
-     */
-    private int userId;
-
-    /**
      * 順位.
      */
     private int rank;
@@ -33,6 +28,6 @@ public class ResultRequestBean {
      * @return ResultDto
      */
     public ResultDto toResultDto() {
-        return new ResultDto(this.userId, this.rank, this.score, this.comment);
+        return new ResultDto(0, this.rank, this.score, this.comment);
     }
 }

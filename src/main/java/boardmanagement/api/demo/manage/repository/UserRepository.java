@@ -4,14 +4,16 @@ import boardmanagement.api.demo.manage.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * ユーザリポジトリ.
  */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
-    UserEntity findById(int id);
+    Optional<UserEntity> findById(int id);
 
-    UserEntity findByName(String name);
+    Optional<UserEntity> findByName(String name);
 
     int countByName(String name);
 }

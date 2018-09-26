@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * ルームサービスクラス.
@@ -79,8 +80,7 @@ public class RoomService {
      * @param roomId ルームID
      * @return ルーム情報
      */
-    public RoomEntityBean findById(int roomId) {
-        RoomEntity roomEntity = roomRepository.findById(roomId);
-        return new RoomEntityBean(roomEntity);
-    }
+    public Optional<RoomEntityBean> findById(int roomId) {
+        return  roomRepository.findById(roomId).map(r -> new RoomEntityBean(r));
+        }
 }
