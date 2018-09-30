@@ -10,13 +10,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * チェックインサービスクラス.
  */
 @Service
 public class CheckInService {
+    private static final int FIND_LIMIT = 20;
 
     @Autowired
     CheckInRepository checkInRepository;
@@ -52,4 +55,17 @@ public class CheckInService {
         return Optional.of(new CheckInEntityBean(checkInInfoEntity));
     }
 
+    /**
+     * ユーザIDに紐付いたチェックイン情報を取得する.
+     *
+     * @param id ユーザID
+     * @param page ページ番号
+     * @return チェックイン情報のリスト
+     */
+    public List<CheckInEntityBean> findCheckInByUserId(int id, int page) {
+        Pageable limit = PageRequest.of(page, FIND_LIMIT);
+        Page<CheckInEntity> checkInEntities = checkInRepository.findByUserIdOrderByTimestampDesc(limit, id);
+
+        return checkInEntities.stream().map(CheckInEntityBean::new).collect(Collectors.toList());
+    }
 }

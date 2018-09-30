@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -143,10 +144,64 @@ public class UserController {
         return new SuccessBean<>(bean);
     }
 
+    /**
+     * ログインユーザのステータス情報を取得する.
+     * @return ログインユーザのステータス情報
+     */
     @GetMapping(path="status")
     SuccessBean<StatusResponseBean> status(){
         UserStatusResponseDto dto = userStatusService.getLoginUserStatus();
         return new SuccessBean<>(new StatusResponseBean(dto));
+    }
+
+    /**
+     * ログインユーザの参加履歴を取得する.
+     * @param page ページング
+     * @return 参加履歴
+     */
+    @GetMapping(path="history/join/{page:^[a-z0-9]+$}")
+    public SuccessBean<List<JoinRoomEntityBean>> joinHistory(@PathVariable int page) {
+        Optional<UserEntityBean> loginUser = userService.getLoginUser();
+        if(!loginUser.isPresent()){
+            throw new IllegalArgumentException("no login user");
+        }
+
+        List<JoinRoomEntityBean> joinHistory = joinRoomService.findJoinRoomByUserId(loginUser.get().getId(), page);
+
+        return new SuccessBean<>(joinHistory);
+    }
+
+    /**
+     * ログインユーザのチェックイン履歴を取得する.
+     * @param page ページング
+     * @return チェックイン履歴
+     */
+    @GetMapping(path="history/checkin/{page:^[a-z0-9]+$}")
+    public SuccessBean<List<CheckInEntityBean>> checkInHistory(@PathVariable int page) {
+        Optional<UserEntityBean> loginUser = userService.getLoginUser();
+        if(!loginUser.isPresent()){
+            throw new IllegalArgumentException("no login user");
+        }
+
+        List<CheckInEntityBean> checkInHistory = checkInService.findCheckInByUserId(loginUser.get().getId(), page);
+
+        return new SuccessBean<>(checkInHistory);
+    }
+
+    /**
+     * ログインユーザの結果履歴を取得する.
+     * @param page ページング
+     * @return 結果履歴
+     */
+    @GetMapping(path="history/result/{page:^[a-z0-9]+$}")
+    public SuccessBean<List<ResultEntityBean>> resultHistory(@PathVariable int page) {
+        Optional<UserEntityBean> loginUser = userService.getLoginUser();
+        if(!loginUser.isPresent()){
+            throw new IllegalArgumentException("no login user");
+        }
+
+        List<ResultEntityBean> resultHistory = resultService.findResultByUserId(loginUser.get().getId(), page);
+        return new SuccessBean<>(resultHistory);
     }
 
 }

@@ -5,13 +5,20 @@ import boardmanagement.api.demo.manage.dto.ResultDto;
 import boardmanagement.api.demo.manage.entity.ResultEntity;
 import boardmanagement.api.demo.manage.repository.ResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 結果情報サービスクラス.
  */
 @Service
 public class ResultService {
+    private static final int FIND_LIMIT = 20;
 
     @Autowired
     ResultRepository resultRepository;
@@ -37,4 +44,18 @@ public class ResultService {
         return new ResultEntityBean(result);
     }
 
+    /**
+     * ユーザIDから結果を取得する.
+     *
+     * @param userId ユーザID
+     * @param page ページング
+     * @return 結果のリスト
+     */
+    public List<ResultEntityBean> findResultByUserId(int userId, int page) {
+
+        Pageable limit = PageRequest.of(page, FIND_LIMIT);
+        Page<ResultEntity> joinRoomEntities = resultRepository.findByUserId(limit, userId);
+
+        return joinRoomEntities.stream().map(ResultEntityBean::new).collect(Collectors.toList());
+    }
 }

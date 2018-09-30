@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class JoinRoomService {
+    private static final int FIND_LIMIT = 20;
 
     /**
      * ルーム参加リポジトリ.
@@ -56,11 +57,26 @@ public class JoinRoomService {
 
     /**
      * 最新のルーム参加情報を取得する.
+     * @param userId ユーザID
      * @return 最新のルーム情報
      */
     public JoinRoomEntityBean findLatestJoinRoomByUserId(int userId) {
         Pageable limit = PageRequest.of(0, 1);
         Page<JoinRoomEntity> joinRoomEntities = joinRoomRepository.findByUserIdOrderByJoinDateDesc(limit, userId);
         return new JoinRoomEntityBean(joinRoomEntities.getContent().get(0));
+    }
+
+    /**
+     * ユーザIDに紐付いた参加情報を取得する.
+     *
+     * @param userId ユーザID
+     * @param page ページ番号
+     * @return 参加情報のリスト.
+     */
+    public List<JoinRoomEntityBean> findJoinRoomByUserId(int userId, int page) {
+        Pageable limit = PageRequest.of(page, FIND_LIMIT);
+        Page<JoinRoomEntity> joinRoomEntities = joinRoomRepository.findByUserIdOrderByJoinDateDesc(limit, userId);
+
+        return joinRoomEntities.stream().map(JoinRoomEntityBean::new).collect(Collectors.toList());
     }
 }
