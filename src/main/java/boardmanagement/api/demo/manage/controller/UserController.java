@@ -105,7 +105,7 @@ public class UserController {
     }
 
     /**
-     * チェックインする.
+     * チェックインする.チェックイン中のものがあればチェックアウトする.
      *
      * @param placeName 場所名
      * @return チェックイン済情報
@@ -116,10 +116,28 @@ public class UserController {
         if(!loginUser.isPresent()){
             throw new IllegalArgumentException("no login user");
         }
+        //TODO: チェックイン中のものはチェックアウト
 
-        CheckInEntityBean registerdBean = checkInService.register(loginUser.get().getId(), placeName);
+        CheckInEntityBean registerdBean = checkInService.checkIn(loginUser.get().getId(), placeName);
 
         return new SuccessBean<>(registerdBean);
+    }
+
+    /**
+     * チェックアウトする.
+     *
+     * @return チェックイン済情報
+     */
+    @PutMapping(path="checkout")
+    SuccessBean<Integer> checkout(){
+        Optional<UserEntityBean> loginUser = userService.getLoginUser();
+        if(!loginUser.isPresent()){
+            throw new IllegalArgumentException("no login user");
+        }
+
+        Integer updateCount = checkInService.checkout(loginUser.get().getId());
+
+        return new SuccessBean<>(updateCount);
     }
 
     /**

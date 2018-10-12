@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -49,6 +50,27 @@ public class CheckInRepositoryTest {
         assertCheckInEntityWithoutDate(actual.get(0), new CheckInEntity(3, 1, "10", null, false));
     }
 
+    @Test
+    public void チェックアウトメソッド_対象機能のみチェックアウト_対象外もののがチェックアウトされていないこと() {
+        testEntityManager.persist( new CheckInEntity(0, 1, "10", new Date(), false));
+        testEntityManager.persist( new CheckInEntity(0, 1, "10", new Date(), false));
+        testEntityManager.persist( new CheckInEntity(0, 1, "10", new Date(), true));
+        testEntityManager.persist( new CheckInEntity(0, 2, "10", new Date(), false));
+        testEntityManager.persist( new CheckInEntity(0, 2, "10", new Date(), true));
+
+        Integer resultCount = checkInRepository.checkOutByUserId(1);
+
+        // 更新件数はユーザID=1かつチェックアウトフラグがfalseの2件
+        assertThat(resultCount, is(2));
+
+        Pageable limit = PageRequest.of(0,4);
+        List<CheckInEntity> actual = checkInRepository.findByUserIdOrderByIdDesc(limit, 1);
+
+        // 更新後、すべてのデータがチェックアウト済になっていることを確認する.
+        assertThat(actual.size(), is(3));
+        actual.forEach(a -> assertThat(a.isCheckedOut(), is(true)));
+    }
+
     /**
      * 日付以外のCheckInEntityをアサーションする.
      * @param actual 実際のEnitty
@@ -60,5 +82,4 @@ public class CheckInRepositoryTest {
         assertThat(actual.getPlaceName(), is(expected.getPlaceName()));
         assertThat(actual.isCheckedOut(), is(expected.isCheckedOut()));
     }
-
 }

@@ -25,13 +25,14 @@ public class CheckInService {
     CheckInRepository checkInRepository;
 
     /**
-     * チェックインする.
+     * チェックインする.チェックイン時、チェックイン状態もののがあればチェックアウトさせる.
      * @param userId ユーザID
      * @return 登録済チェックイン情報
      */
-    public CheckInEntityBean register(int userId, String placeName) {
+    public CheckInEntityBean checkIn(int userId, String placeName) {
         CheckInEntity entity = new CheckInEntity(0, userId, placeName, new Date(), false);
 
+        checkInRepository.checkOutByUserId(userId);
         CheckInEntity registerdEntity = checkInRepository.save(entity);
 
         return new CheckInEntityBean(registerdEntity);
@@ -67,5 +68,15 @@ public class CheckInService {
         Page<CheckInEntity> checkInEntities = checkInRepository.findByUserIdOrderByTimestampDesc(limit, id);
 
         return checkInEntities.stream().map(CheckInEntityBean::new).collect(Collectors.toList());
+    }
+
+    /**
+     * 引数に対応するカラムをチェックアウト状態に更新する.
+     *
+     * @param userId チェックアウト対象のユーザID
+     * @return 更新後のチェックアウトEntity情報
+     */
+    public Integer checkout(int userId) {
+        return checkInRepository.checkOutByUserId(userId);
     }
 }
