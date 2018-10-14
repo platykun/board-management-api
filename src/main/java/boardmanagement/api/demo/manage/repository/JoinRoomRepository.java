@@ -12,9 +12,9 @@ import java.util.Optional;
  * 参加リポジトリ.
  */
 public interface JoinRoomRepository extends JpaRepository<JoinRoomEntity, Integer> {
-    Optional<JoinRoomEntity> findByUserIdAndRoomId(int userId, int roomId);
+    Optional<JoinRoomEntity> findByUserIdAndRoomId(String userId, int roomId);
 
     List<JoinRoomEntity> findByRoomId(int roomId);
 
-    Page<JoinRoomEntity> findByUserIdOrderByJoinDateDesc(Pageable page, int userId);
+    Page<JoinRoomEntity> findByUserIdOrderByCreateDesc(Pageable page, String userId);
 }

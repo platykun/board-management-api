@@ -11,7 +11,7 @@ public class RegisterJoinRoomDto {
     /**
      * ユーザID.
      */
-    private int userId;
+    private String userId;
     /**
      * ルームID.
      */

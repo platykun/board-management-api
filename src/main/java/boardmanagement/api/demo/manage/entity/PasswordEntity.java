@@ -22,7 +22,7 @@ public class PasswordEntity {
      * ユーザID.
      */
     @Id
-    private int userId;
+    private String userId;
 
     /**
      * パスワード.

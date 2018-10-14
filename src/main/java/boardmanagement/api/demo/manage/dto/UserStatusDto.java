@@ -14,7 +14,7 @@ public class UserStatusDto {
     /**
      * ユーザID.
      */
-    private int userId;
+    private String userId;
 
     /**
      * チェックイン中の場所.

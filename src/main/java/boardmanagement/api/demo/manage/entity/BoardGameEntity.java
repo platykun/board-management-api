@@ -19,9 +19,14 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class BoardGameEntity {
     /**
-     * ボードゲームタイトル.
+     * ボードゲームID.
      */
     @Id
+    private int id;
+
+    /**
+     * ボードゲームタイトル.
+     */
     private String title;
 
     /**

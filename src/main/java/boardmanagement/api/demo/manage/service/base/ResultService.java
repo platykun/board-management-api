@@ -51,7 +51,7 @@ public class ResultService {
      * @param page ページング
      * @return 結果のリスト
      */
-    public List<ResultEntityBean> findResultByUserId(int userId, int page) {
+    public List<ResultEntityBean> findResultByUserId(String userId, int page) {
 
         Pageable limit = PageRequest.of(page, FIND_LIMIT);
         Page<ResultEntity> joinRoomEntities = resultRepository.findByUserId(limit, userId);

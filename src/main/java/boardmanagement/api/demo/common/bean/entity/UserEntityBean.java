@@ -15,7 +15,7 @@ public class UserEntityBean {
     /**
      * ユーザID.
      */
-    private int id;
+    private String id;
 
     /**
      * ユーザ名.

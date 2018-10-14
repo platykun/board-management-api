@@ -23,7 +23,7 @@ public class JoinRoomEntity {
      * ユーザID.
      */
     @Id
-    private int userId;
+    private String userId;
 
     /**
      * 部屋ID.
@@ -39,7 +39,7 @@ public class JoinRoomEntity {
     /**
      * 参加時間
      */
-    private Date joinDate;
+    private Date create;
 
     /**
      * 主キー定義
@@ -49,7 +49,7 @@ public class JoinRoomEntity {
     public static class PK implements Serializable{
 
         @Column
-        private int userId;
+        private String userId;
 
         @Column
         private int roomId;

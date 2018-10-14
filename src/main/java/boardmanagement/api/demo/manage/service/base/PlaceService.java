@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -69,5 +70,16 @@ public class PlaceService {
         resultEntityPage.forEach(r -> resultPlaces.add(new PlaceEntityBean(r)));
 
         return resultPlaces;
+    }
+
+    /**
+     * IDから場所情報を取得する.
+     *
+     * @param placeId 場所ID
+     * @return 場所情報
+     */
+    public PlaceEntityBean findById(int placeId) {
+        Optional<PlaceEntity> result = placeRepository.findById(String.valueOf(placeId));
+        return new PlaceEntityBean(result.get());
     }
 }

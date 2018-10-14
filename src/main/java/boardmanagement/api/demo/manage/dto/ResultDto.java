@@ -14,7 +14,7 @@ public class ResultDto {
     /**
      * ユーザID.
      */
-    private int userId;
+    private String userId;
 
     /**
      * 順位.

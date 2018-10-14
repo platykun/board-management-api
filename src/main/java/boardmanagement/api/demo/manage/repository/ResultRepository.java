@@ -11,7 +11,7 @@ import java.util.Optional;
  * 記録リポジトリ.
  */
 public interface ResultRepository extends JpaRepository<ResultEntity, Integer> {
-    Optional<ResultEntity> findByUserIdAndRoomId(int userId, int roomId);
+    Optional<ResultEntity> findByUserIdAndRoomId(String userId, int roomId);
 
-    Page<ResultEntity> findByUserId(Pageable limit, int userId);
+    Page<ResultEntity> findByUserId(Pageable limit, String userId);
 }

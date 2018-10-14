@@ -13,6 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlaceEntityBean {
     /**
+     * 場所ID.
+     */
+    private int id;
+
+    /**
      * 場所名.
      */
     private String name;
@@ -23,6 +28,7 @@ public class PlaceEntityBean {
     private String url;
 
     public PlaceEntityBean(PlaceEntity entity){
+        this.id = entity.getId();
         this.name = entity.getName();
         this.url = entity.getUrl();
     }
@@ -33,6 +39,6 @@ public class PlaceEntityBean {
      * @return Entityクラス
      */
     public PlaceEntity toEntity() {
-        return new PlaceEntity(this.getName(), this.getUrl());
+        return new PlaceEntity(this.getId(), this.getName(), this.getUrl());
     }
 }

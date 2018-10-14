@@ -28,6 +28,6 @@ public class ResultRequestBean {
      * @return ResultDto
      */
     public ResultDto toResultDto() {
-        return new ResultDto(0, this.rank, this.score, this.comment);
+        return new ResultDto(null, this.rank, this.score, this.comment);
     }
 }

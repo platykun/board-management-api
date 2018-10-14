@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardGameEntityBean {
     /**
+     * ボードゲームID.
+     */
+    private int id;
+    /**
      * ボードゲームタイトル.
      */
     private String title;
@@ -28,6 +32,7 @@ public class BoardGameEntityBean {
     private String overview;
 
     public BoardGameEntityBean(BoardGameEntity entity) {
+        this.id = entity.getId();
         this.title = entity.getTitle();
         this.player = entity.getPlayer();
         this.overview = entity.getOverview();
@@ -39,6 +44,6 @@ public class BoardGameEntityBean {
      * @return Entityクラス
      */
     public BoardGameEntity toEntity() {
-        return new BoardGameEntity(this.getTitle(), this.getPlayer(), this.getOverview());
+        return new BoardGameEntity(this.getId(), this.getTitle(), this.getPlayer(), this.getOverview());
     }
 }

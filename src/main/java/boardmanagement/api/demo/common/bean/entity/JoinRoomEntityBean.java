@@ -17,7 +17,7 @@ public class JoinRoomEntityBean {
     /**
      * ユーザID.
      */
-    private int userId;
+    private String userId;
 
     /**
      * 部屋ID.
@@ -29,13 +29,13 @@ public class JoinRoomEntityBean {
      */
     private boolean owner;
 
-    private Date joinDate;
+    private Date create;
 
     public JoinRoomEntityBean(JoinRoomEntity entity) {
         this.userId = entity.getUserId();
         this.roomId = entity.getRoomId();
         this.owner = entity.isOwner();
-        this.joinDate = entity.getJoinDate();
+        this.create = entity.getCreate();
     }
 
     /**
@@ -45,6 +45,6 @@ public class JoinRoomEntityBean {
      * @return Entityクラス
      */
     public JoinRoomEntity convertToEntity(JoinRoomEntityBean bean) {
-        return new JoinRoomEntity(bean.getUserId(), bean.getRoomId(), bean.isOwner(), bean.getJoinDate());
+        return new JoinRoomEntity(bean.getUserId(), bean.getRoomId(), bean.isOwner(), bean.getCreate());
     }
 }

@@ -23,7 +23,7 @@ public class UserEntity {
      */
     @Id
     @GeneratedValue
-    private int id;
+    private String id;
 
     /**
      * ユーザ名.

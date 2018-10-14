@@ -27,11 +27,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if(userService.countByUserName(username)!= 1){
+        if(userService.countById(username)!= 1){
             throw new UsernameNotFoundException(username);
         }
 
-        int authority = userService.findByUserName(username).get().getAuthority();
+        int authority = userService.findByUserId(username).get().getAuthority();
 
         if(ADMIN.ordinal() == authority){
             Collection<GrantedAuthority> authorityList = new ArrayList<>();

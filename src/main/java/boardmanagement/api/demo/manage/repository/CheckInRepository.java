@@ -20,9 +20,9 @@ import java.util.Optional;
 public interface CheckInRepository extends JpaRepository<CheckInEntity, Integer> {
     Optional<CheckInEntity> findById(int id);
 
-    List<CheckInEntity> findByUserIdOrderByIdDesc(Pageable var1, int userId);
+    List<CheckInEntity> findByUserIdOrderByIdDesc(Pageable var1, String userId);
 
-    Page<CheckInEntity> findByUserIdOrderByTimestampDesc(Pageable var1, int userId);
+    Page<CheckInEntity> findByUserIdOrderByTimestampDesc(Pageable var1, String userId);
 
     /**
      * ユーザIDに紐づくすべての未チェックアウトデータをチェックアウト済にする.
@@ -34,5 +34,5 @@ public interface CheckInRepository extends JpaRepository<CheckInEntity, Integer>
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE CheckInEntity c SET c.checkedOut = true WHERE c.userId = :userId AND c.checkedOut = false")
-    Integer checkOutByUserId(@Param("userId") Integer userId);
+    Integer checkOutByUserId(@Param("userId") String userId);
 }

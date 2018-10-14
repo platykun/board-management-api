@@ -59,7 +59,16 @@ public class UserService {
      * @param userId ユーザID
      * @return ユーザ情報
      */
-    public Optional<UserEntityBean> findByUserId(int userId) {
+    public Optional<UserEntityBean> findByUserId(String userId) {
         return userRepository.findById(userId).map(UserEntityBean::new);
+    }
+
+    /**
+     * ユーザ数をカウントする.
+     * @param id ID
+     * @return ユーザ数
+     */
+    public int countById(String id) {
+        return userRepository.countById(id);
     }
 }

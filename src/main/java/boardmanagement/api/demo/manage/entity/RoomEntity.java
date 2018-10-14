@@ -32,9 +32,19 @@ public class RoomEntity {
     private String roomName;
 
     /**
+     * ボードゲームID.
+     */
+    private int boardGameId;
+
+    /**
      * ボードゲームタイトル.
      */
-    private String boardTitle;
+    private String boardGameTitle;
+
+    /**
+     * 場所ID.
+     */
+    private int placeId;
 
     /**
      * 場所名.
@@ -50,6 +60,11 @@ public class RoomEntity {
      * 備考.
      */
     private String remark;
+
+    /**
+     * ルームステータス
+     */
+    private int status;
 
     /**
      * 作成日

@@ -29,8 +29,8 @@ public class CheckInService {
      * @param userId ユーザID
      * @return 登録済チェックイン情報
      */
-    public CheckInEntityBean checkIn(int userId, String placeName) {
-        CheckInEntity entity = new CheckInEntity(0, userId, placeName, new Date(), false);
+    public CheckInEntityBean checkIn(String userId, int placeId) {
+        CheckInEntity entity = new CheckInEntity(0, userId, placeId, new Date(), false);
 
         checkInRepository.checkOutByUserId(userId);
         CheckInEntity registerdEntity = checkInRepository.save(entity);
@@ -44,7 +44,7 @@ public class CheckInService {
      * @param userId ユーザID
      * @return 最新のチェックイン情報
      */
-    public Optional<CheckInEntityBean> findLatestCheckin(int userId) {
+    public Optional<CheckInEntityBean> findLatestCheckin(String userId) {
         Pageable limit = PageRequest.of(0, 1);
         Page<CheckInEntity> checkInEntity = checkInRepository.findByUserIdOrderByTimestampDesc(limit, userId);
 
@@ -63,7 +63,7 @@ public class CheckInService {
      * @param page ページ番号
      * @return チェックイン情報のリスト
      */
-    public List<CheckInEntityBean> findCheckInByUserId(int id, int page) {
+    public List<CheckInEntityBean> findCheckInByUserId(String id, int page) {
         Pageable limit = PageRequest.of(page, FIND_LIMIT);
         Page<CheckInEntity> checkInEntities = checkInRepository.findByUserIdOrderByTimestampDesc(limit, id);
 
@@ -76,7 +76,7 @@ public class CheckInService {
      * @param userId チェックアウト対象のユーザID
      * @return 更新後のチェックアウトEntity情報
      */
-    public Integer checkout(int userId) {
+    public Integer checkout(String userId) {
         return checkInRepository.checkOutByUserId(userId);
     }
 }

@@ -15,7 +15,7 @@ public class PasswordEntityBean {
     /**
      * ユーザID.
      */
-    private int userId;
+    private String userId;
 
     /**
      * パスワード.

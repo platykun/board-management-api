@@ -33,6 +33,9 @@ public class UserStatusService {
     private RoomService roomService;
 
     @Autowired
+    private PlaceService placeService;
+
+    @Autowired
     public UserStatusService(CheckInService checkInService) {
         this.checkInService = checkInService;
     }
@@ -47,21 +50,22 @@ public class UserStatusService {
         // ユーザが見つからなかった場合Optionalでexceptionが送出される
         UserEntityBean loginUserBean = userService.getLoginUser().get();
 
-        // ログイン者のチェックイン情報.取得できなかった場合、空文字を返却する.
+        // ログイン者のチェックイン情報.取得できなかった場合、-1を返却する.
         Optional<CheckInEntityBean> checkInEntityBean = checkInService.findLatestCheckin(loginUserBean.getId());
-        String placeName = checkInEntityBean.map(CheckInEntityBean::getPlaceName).orElse("");
+        // 場所IDから場所名を割り出す。存在しない場合空文字.
+        String placeName = checkInEntityBean.map(c -> {return placeService.findById(c.getPlaceId()).getName();}).orElse("");
         // ログイン者の参加情報.
         JoinRoomEntityBean joiningRoom = joinRoomService.findLatestJoinRoomByUserId(loginUserBean.getId());
         Optional<RoomEntityBean> room = roomService.findById(joiningRoom.getRoomId());
 
         String roomName = "";
-        String boardTitle = "";
+        String boardGameTitle = "";
         int player = 0;
         String remark = "";
         if (room.isPresent()) {
             RoomEntityBean r = room.get();
             roomName = r.getRoomName();
-            boardTitle = r.getBoardTitle();
+            boardGameTitle = r.getBoardGameTitle();
             player = r.getPlayer();
             remark = r.getRemark();
         }
@@ -74,7 +78,7 @@ public class UserStatusService {
         return new UserStatusResponseDto(
                 placeName,
                 roomName,
-                boardTitle,
+                boardGameTitle,
                 player,
                 remark,
                 joiningUserList

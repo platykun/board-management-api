@@ -41,7 +41,7 @@ public class JoinRoomService {
     public JoinRoomEntityBean register(RegisterJoinRoomDto dto) {
         JoinRoomEntity joinRoomEntity = new JoinRoomEntity();
         BeanUtils.copyProperties(dto, joinRoomEntity);
-        joinRoomEntity.setJoinDate(new Date());
+        joinRoomEntity.setCreate(new Date());
         JoinRoomEntity savedEntity = joinRoomRepository.save(joinRoomEntity);
 
         return new JoinRoomEntityBean(savedEntity);
@@ -60,9 +60,9 @@ public class JoinRoomService {
      * @param userId ユーザID
      * @return 最新のルーム情報
      */
-    public JoinRoomEntityBean findLatestJoinRoomByUserId(int userId) {
+    public JoinRoomEntityBean findLatestJoinRoomByUserId(String userId) {
         Pageable limit = PageRequest.of(0, 1);
-        Page<JoinRoomEntity> joinRoomEntities = joinRoomRepository.findByUserIdOrderByJoinDateDesc(limit, userId);
+        Page<JoinRoomEntity> joinRoomEntities = joinRoomRepository.findByUserIdOrderByCreateDesc(limit, userId);
         return new JoinRoomEntityBean(joinRoomEntities.getContent().get(0));
     }
 
@@ -73,9 +73,9 @@ public class JoinRoomService {
      * @param page ページ番号
      * @return 参加情報のリスト.
      */
-    public List<JoinRoomEntityBean> findJoinRoomByUserId(int userId, int page) {
+    public List<JoinRoomEntityBean> findJoinRoomByUserId(String userId, int page) {
         Pageable limit = PageRequest.of(page, FIND_LIMIT);
-        Page<JoinRoomEntity> joinRoomEntities = joinRoomRepository.findByUserIdOrderByJoinDateDesc(limit, userId);
+        Page<JoinRoomEntity> joinRoomEntities = joinRoomRepository.findByUserIdOrderByCreateDesc(limit, userId);
 
         return joinRoomEntities.stream().map(JoinRoomEntityBean::new).collect(Collectors.toList());
     }

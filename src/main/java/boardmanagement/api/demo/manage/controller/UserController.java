@@ -95,7 +95,7 @@ public class UserController {
             throw new IllegalArgumentException("no login user");
         }
 
-        int userIdNum = loginUser.get().getId();
+        String userIdNum = loginUser.get().getId();
         int roomIdNum = Integer.parseInt(roomId);
         RegisterJoinRoomDto registerJoinRoomDto = new RegisterJoinRoomDto(userIdNum, roomIdNum, false);
 
@@ -107,18 +107,18 @@ public class UserController {
     /**
      * チェックインする.チェックイン中のものがあればチェックアウトする.
      *
-     * @param placeName 場所名
+     * @param placeId 場所ID
      * @return チェックイン済情報
      */
-    @PutMapping(path="checkin/{placeName}")
-    SuccessBean<CheckInEntityBean> checkin(@PathVariable String placeName){
+    @PutMapping(path="checkin/{placeId}")
+    SuccessBean<CheckInEntityBean> checkin(@PathVariable int placeId){
         Optional<UserEntityBean> loginUser = userService.getLoginUser();
         if(!loginUser.isPresent()){
             throw new IllegalArgumentException("no login user");
         }
         //TODO: チェックイン中のものはチェックアウト
 
-        CheckInEntityBean registerdBean = checkInService.checkIn(loginUser.get().getId(), placeName);
+        CheckInEntityBean registerdBean = checkInService.checkIn(loginUser.get().getId(), placeId);
 
         return new SuccessBean<>(registerdBean);
     }

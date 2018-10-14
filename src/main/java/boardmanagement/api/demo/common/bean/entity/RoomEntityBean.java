@@ -25,9 +25,19 @@ public class RoomEntityBean {
     private String roomName;
 
     /**
+     * ボードゲームID.
+     */
+    private int boardGameId;
+
+    /**
      * ボードゲームタイトル.
      */
-    private String boardTitle;
+    private String boardGameTitle;
+
+    /**
+     * 場所ID.
+     */
+    private int placeId;
 
     /**
      * 場所名.
@@ -40,22 +50,30 @@ public class RoomEntityBean {
     private int player;
 
     /**
-     * 作成日
-     */
-    private Date create;
-
-    /**
      * 備考.
      */
     private String remark;
 
+    /**
+     * ルームステータス
+     */
+    private int status;
+
+    /**
+     * 作成日
+     */
+    private Date create;
+
     public RoomEntityBean(RoomEntity entity) {
         this.id = entity.getId();
         this.roomName = entity.getRoomName();
-        this.boardTitle = entity.getBoardTitle();
+        this.boardGameId = entity.getBoardGameId();
+        this.boardGameTitle = entity.getBoardGameTitle();
+        this.placeId = entity.getPlaceId();
         this.placeName = entity.getPlaceName();
         this.player = entity.getPlayer();
         this.remark = entity.getRemark();
+        this.status = entity.getStatus();
         this.create = entity.getCreate();
     }
 
@@ -66,7 +84,8 @@ public class RoomEntityBean {
      * @return Entityクラス
      */
     public RoomEntity convertToEntity(RoomEntityBean bean) {
-        return new RoomEntity(bean.getId(), bean.getRoomName(), bean.getBoardTitle(),
-                bean.getPlaceName(), bean.getPlayer(), bean.getRemark(), bean.getCreate());
+        return new RoomEntity(bean.getId(), bean.getRoomName(), bean.getBoardGameId(), bean.getBoardGameTitle(),
+                bean.getPlaceId(), bean.getPlaceName(), bean.getPlayer(), bean.getRemark(), bean.getStatus(),
+                bean.getCreate());
     }
 }

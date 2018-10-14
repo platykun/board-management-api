@@ -18,9 +18,14 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class PlaceEntity {
     /**
-     * 場所名.
+     * 場所ID.
      */
     @Id
+    private int id;
+
+    /**
+     * 場所名.
+     */
     private String name;
 
     /**
