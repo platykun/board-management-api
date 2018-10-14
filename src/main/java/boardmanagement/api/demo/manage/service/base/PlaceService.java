@@ -79,7 +79,7 @@ public class PlaceService {
      * @return 場所情報
      */
     public PlaceEntityBean findById(int placeId) {
-        Optional<PlaceEntity> result = placeRepository.findById(String.valueOf(placeId));
+        Optional<PlaceEntity> result = placeRepository.findById(placeId);
         return new PlaceEntityBean(result.get());
     }
 }

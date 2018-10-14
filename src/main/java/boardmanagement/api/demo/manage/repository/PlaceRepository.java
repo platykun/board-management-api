@@ -19,4 +19,6 @@ public interface PlaceRepository extends JpaRepository<PlaceEntity, String> {
 
     @Query(value = "SELECT p FROM PlaceEntity p WHERE p.name LIKE %:name% ORDER BY p.name DESC")
     Page<PlaceEntity> findByName(@Param("name") String name, Pageable pageable);
+
+    Optional<PlaceEntity> findById(int placeId);
 }

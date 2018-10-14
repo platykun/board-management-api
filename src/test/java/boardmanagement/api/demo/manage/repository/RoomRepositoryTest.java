@@ -61,7 +61,8 @@ public class RoomRepositoryTest {
      * @param expected 予想のEntity
      */
     private void assertRoomEntity(RoomEntity actual, RoomEntity expected) {
-        assertThat(actual.getId(), is(expected.getId()));
+        // auto incrementのIDはアサーション対象外
+        // assertThat(actual.getId(), is(expected.getId()));
         assertThat(actual.getRoomName(), is(expected.getRoomName()));
         assertThat(actual.getBoardGameId(), is(expected.getBoardGameId()));
         assertThat(actual.getBoardGameTitle(), is(expected.getBoardGameTitle()));

@@ -14,9 +14,19 @@ public class RegisterRoomDto {
     private String roomName;
 
     /**
+     * ボードゲームID.
+     */
+    private int boardGameId;
+
+    /**
      * ボードゲームタイトル.
      */
     private String boardTitle;
+
+    /**
+     * 場所ID.
+     */
+    private int placeId;
 
     /**
      * 場所名.
@@ -32,4 +42,9 @@ public class RegisterRoomDto {
      * 備考.
      */
     private String remark;
+
+    /**
+     * ルームステータス.
+     */
+    private int status;
 }

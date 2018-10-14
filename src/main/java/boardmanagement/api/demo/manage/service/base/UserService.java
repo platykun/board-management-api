@@ -34,7 +34,7 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = (String) authentication.getPrincipal();
 
-        return  userRepository.findByName(userName).map(UserEntityBean::new);
+        return  userRepository.findById(userName).map(UserEntityBean::new);
     }
 
     /**

@@ -29,6 +29,9 @@ public class JoinRoomEntityBean {
      */
     private boolean owner;
 
+    /**
+     * 作成日
+     */
     private Date create;
 
     public JoinRoomEntityBean(JoinRoomEntity entity) {
