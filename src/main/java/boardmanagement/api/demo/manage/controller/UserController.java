@@ -11,7 +11,6 @@ import boardmanagement.api.demo.manage.dto.ResultDto;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.service.UserStatusService;
 import boardmanagement.api.demo.manage.service.base.*;
-import com.sun.net.httpserver.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -15,6 +15,11 @@ import java.util.Date;
 @NoArgsConstructor
 public class ResultEntityBean {
     /**
+     * ID
+     */
+    private int id;
+
+    /**
      * ユーザID
      */
     private String userId;
@@ -65,6 +70,7 @@ public class ResultEntityBean {
     private Date create;
 
     public ResultEntityBean(ResultEntity entity) {
+        this.id = entity.getId();
         this.userId = entity.getUserId();
         this.roomId = entity.getRoomId();
         this.boardGameId = entity.getBoardGameId();
@@ -84,8 +90,19 @@ public class ResultEntityBean {
      * @return Entityクラス
      */
     public ResultEntity convertToEntity(ResultEntityBean bean) {
-        return new ResultEntity(bean.getUserId(), bean.getRoomId(), bean.getBoardGameId(), bean.getBoardGameTitle(),
-                bean.getPlaceId(), bean.getPlaceName(), bean.getRank(), bean.getScore(), bean.getComment(), bean.getCreate());
+        return new ResultEntity(
+                bean.getId(),
+                bean.getUserId(),
+                bean.getRoomId(),
+                bean.getBoardGameId(),
+                bean.getBoardGameTitle(),
+                bean.getPlaceId(),
+                bean.getPlaceName(),
+                bean.getRank(),
+                bean.getScore(),
+                bean.getComment(),
+                bean.getCreate()
+        );
     }
 
 

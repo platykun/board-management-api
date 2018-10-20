@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,18 +15,22 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(ResultEntity.PK.class)
 public class ResultEntity {
+    /**
+     * 結果ID
+     */
+    @Id
+    @GeneratedValue
+    private int id;
+
     /**
      * ユーザID
      */
-    @Id
     private String userId;
 
     /**
      * ルームID
      */
-    @Id
     private int roomId;
 
     /**
@@ -69,17 +72,4 @@ public class ResultEntity {
      * 作成日.
      */
     private Date create;
-
-    /**
-     * 主キー定義
-     */
-    @Embeddable
-    @Data
-    public static class PK implements Serializable{
-        @Column
-        private String userId;
-
-        @Column
-        private int roomId;
-    }
 }
