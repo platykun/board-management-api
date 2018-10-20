@@ -12,4 +12,6 @@ import java.util.Optional;
 @Repository
 public interface BoardGameRepository extends JpaRepository<BoardGameEntity, String> {
     Optional<BoardGameEntity> findByTitle(String title);
+
+    void deleteById(int boardGameId);
 }

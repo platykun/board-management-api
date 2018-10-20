@@ -21,4 +21,6 @@ public interface PlaceRepository extends JpaRepository<PlaceEntity, String> {
     Page<PlaceEntity> findByName(@Param("name") String name, Pageable pageable);
 
     Optional<PlaceEntity> findById(int placeId);
+
+    void deleteById(int placeId);
 }

@@ -2,16 +2,16 @@ package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.*;
-import boardmanagement.api.demo.manage.bean.CreateRoomRequestBean;
+import boardmanagement.api.demo.manage.bean.RoomRequestBean;
 import boardmanagement.api.demo.manage.bean.ResultRequestBean;
 import boardmanagement.api.demo.manage.bean.StatusResponseBean;
 import boardmanagement.api.demo.manage.dto.RegisterJoinRoomDto;
-import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
+import boardmanagement.api.demo.manage.dto.RoomDto;
 import boardmanagement.api.demo.manage.dto.ResultDto;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.service.UserStatusService;
 import boardmanagement.api.demo.manage.service.base.*;
-import org.springframework.beans.BeanUtils;
+import com.sun.net.httpserver.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +27,9 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
 
+    /**
+     * ユーザサービスクラス.
+     */
     private final
     UserService userService;
 
@@ -69,17 +72,42 @@ public class UserController {
 
     /**
      * ルームを作成する.
-     * @param createRoomRequestBean ルーム情報
+     * @param roomRequestBean ルーム情報
      * @return 作成結果
      */
-    @PutMapping(path="create_room")
-    SuccessBean<RoomEntityBean> createRoom(@RequestBody CreateRoomRequestBean createRoomRequestBean){
+    @PutMapping(path="room/create")
+    SuccessBean<RoomEntityBean> createRoom(@RequestBody RoomRequestBean roomRequestBean){
 
-        RegisterRoomDto registerRoomDto = new RegisterRoomDto();
-        BeanUtils.copyProperties(createRoomRequestBean, registerRoomDto);
-        RoomEntityBean createdRoom = roomService.register(registerRoomDto);
+        RoomDto registerDto = roomRequestBean.toRegisterRoomDto();
+        RoomEntityBean result = roomService.register(registerDto);
 
-        return new SuccessBean<>(createdRoom);
+        return new SuccessBean<>(result);
+    }
+
+    /**
+     * ルームを更新する.
+     * @param roomRequestBean ルーム情報
+     * @return 作成結果
+     */
+    @PutMapping(path="room/{roomId:^[a-z0-9]+$}")
+    SuccessBean<RoomEntityBean> updateRoom(@PathVariable int roomId, @RequestBody RoomRequestBean roomRequestBean){
+
+        RoomDto updateDto = roomRequestBean.toRegisterRoomDtoWithId(roomId);
+
+        RoomEntityBean result = roomService.update(updateDto);
+
+        return new SuccessBean<>(result);
+    }
+
+    /**
+     * ルームを削除する.
+     * @param roomId ルームID
+     * @return 成功可否
+     */
+    @DeleteMapping(path="room/{roomId:^[a-z0-9]+$}")
+    SuccessBean<Boolean> deleteRoom(@PathVariable int roomId) {
+        Boolean result = roomService.delete(roomId);
+        return new SuccessBean<>(result);
     }
 
     /**
@@ -87,7 +115,7 @@ public class UserController {
      * @param roomId ルームID
      * @return 参加後のルーム情報
      */
-    @PutMapping("join/{roomId:^[a-z0-9]+$}")
+    @PutMapping("room/join/{roomId:^[a-z0-9]+$}")
     SuccessBean<JoinRoomEntityBean> joinRoom(@PathVariable String roomId, Principal principal) {
         // idのユーザをroomIdのルームへ登録させる.
         Optional<UserEntityBean> loginUser = userService.getLoginUser();

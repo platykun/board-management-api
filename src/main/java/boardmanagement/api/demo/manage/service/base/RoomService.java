@@ -1,11 +1,9 @@
 package boardmanagement.api.demo.manage.service.base;
 
 import boardmanagement.api.demo.common.bean.entity.RoomEntityBean;
-import boardmanagement.api.demo.manage.dto.RegisterRoomDto;
-import boardmanagement.api.demo.manage.dto.RegisteredRoomDto;
+import boardmanagement.api.demo.manage.dto.RoomDto;
 import boardmanagement.api.demo.manage.entity.RoomEntity;
 import boardmanagement.api.demo.manage.repository.RoomRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,16 +28,41 @@ public class RoomService {
     /**
      * ルームを登録する.
      *
-     * @param dto ルーム情報
+     * @param registerDto ルーム情報
      * @return 登録済ルーム情報
      */
-    public RoomEntityBean register(RegisterRoomDto dto) {
-        RoomEntity roomEntity = new RoomEntity();
-        BeanUtils.copyProperties(dto, roomEntity);
-        roomEntity.setCreate(new Date());
-        RoomEntity registedRoom = roomRepository.save(roomEntity);
+    public RoomEntityBean register(RoomDto registerDto) {
+        if(registerDto.getId() != 0) throw new IllegalArgumentException();
+
+        RoomEntity target = registerDto.toRoomEntity(new Date());
+        RoomEntity registedRoom = roomRepository.save(target);
 
         return new RoomEntityBean(registedRoom);
+    }
+
+    /**
+     * ルームを更新する.
+     * @param updateDto ルーム情報
+     * @return 更新済ルーム情報
+     */
+    public RoomEntityBean update(RoomDto updateDto) {
+        if(updateDto.getId() == 0) throw new IllegalArgumentException();
+
+        RoomEntity target = updateDto.toRoomEntity(null);
+        RoomEntity updatedRoom = roomRepository.save(target);
+
+        return new RoomEntityBean(updatedRoom);
+    }
+
+    /**
+     * ルームを削除する.
+     * @param roomId ルームID
+     * @return 削除結果
+     */
+    public Boolean delete(int roomId) {
+        roomRepository.deleteById(roomId);
+
+        return true;
     }
 
     /**

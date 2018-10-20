@@ -2,6 +2,7 @@ package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
+import boardmanagement.api.demo.manage.bean.PlaceRequestBean;
 import boardmanagement.api.demo.manage.service.base.PlaceService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,46 @@ public class PlaceController {
     @Autowired
     public PlaceController(PlaceService placeService) {
         this.placeService = placeService;
+    }
+
+    /**
+     * 場所を作成する.
+     *
+     * @param placeRequestBean 場所情報.
+     * @return 作成済場所情報.
+     */
+    @PutMapping("")
+    public SuccessBean<PlaceEntityBean> createPlace(@RequestBody PlaceRequestBean placeRequestBean) {
+        PlaceEntityBean result = placeService.register(placeRequestBean.toEntityBean());
+
+        return new SuccessBean<>(result);
+    }
+
+    /**
+     * 場所を更新する.
+     *
+     * @param placeUpdateRequestBean 更新情報
+     * @param placeId 場所ID
+     * @return 更新結果情報
+     */
+    @PutMapping("{placeId:^[0-9]+$}")
+    public SuccessBean<PlaceEntityBean> updatePlace(@RequestBody PlaceRequestBean placeUpdateRequestBean, @PathVariable int placeId) {
+        PlaceEntityBean result = placeService.update(placeUpdateRequestBean.toEntityBeanWithId(placeId));
+
+        return new SuccessBean<>(result);
+    }
+
+    /**
+     * 場所を削除する.
+     *
+     * @param placeId 場所ID
+     * @return 削除成功可否
+     */
+    @DeleteMapping("{placeId:^[0-9]+$}")
+    public SuccessBean<Boolean> deletePlace(@PathVariable int placeId) {
+        Boolean result = placeService.delete(placeId);
+
+        return new SuccessBean<>(result);
     }
 
     /**

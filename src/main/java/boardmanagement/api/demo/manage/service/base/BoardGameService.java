@@ -32,10 +32,36 @@ public class BoardGameService {
      * @return 登録済ボードゲーム情報
      */
     public BoardGameEntityBean register(BoardGameEntityBean boardGameEntityBean) {
+        if(boardGameEntityBean.getId() != 0) throw new IllegalArgumentException();
+
         BoardGameEntity entity = boardGameEntityBean.toEntity();
         BoardGameEntity result = boardGameRepository.save(entity);
 
         return new BoardGameEntityBean(result);
+    }
+
+    /**
+     * ボードゲームを更新する.
+     * @param boardGameEntityBean ボードゲーム更新情報
+     * @return 更新後のボードゲーム情報
+     */
+    public BoardGameEntityBean update(BoardGameEntityBean boardGameEntityBean) {
+        if(boardGameEntityBean.getId() == 0) throw new IllegalArgumentException();
+
+        BoardGameEntity entity = boardGameEntityBean.toEntity();
+        BoardGameEntity result = boardGameRepository.save(entity);
+
+        return new BoardGameEntityBean(result);
+    }
+
+    /**
+     * ボードゲームを削除する.
+     * @param boardGameId ボードゲーム削除ID
+     * @return 成功可否
+     */
+    public Boolean delete(int boardGameId) {
+        boardGameRepository.deleteById(boardGameId);
+        return true;
     }
 
     /**
@@ -53,6 +79,5 @@ public class BoardGameService {
         });
         return boardGameEntityBeanList;
     }
-
 
 }

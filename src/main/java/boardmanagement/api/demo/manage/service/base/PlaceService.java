@@ -34,6 +34,22 @@ public class PlaceService {
      * @return 登録済ルーム情報
      */
     public PlaceEntityBean register(PlaceEntityBean placeEntityBean) {
+        if(placeEntityBean.getId() != 0)throw new IllegalArgumentException();
+
+        PlaceEntity entity = placeEntityBean.toEntity();
+        PlaceEntity result = placeRepository.save(entity);
+
+        return new PlaceEntityBean(result);
+    }
+
+    /**
+     * 場所を更新する.
+     * @param placeEntityBean 場所更新情報
+     * @return 更新済ルーム情報
+     */
+    public PlaceEntityBean update(PlaceEntityBean placeEntityBean) {
+        if(placeEntityBean.getId() == 0)throw new IllegalArgumentException();
+
         PlaceEntity entity = placeEntityBean.toEntity();
         PlaceEntity result = placeRepository.save(entity);
 
@@ -81,5 +97,15 @@ public class PlaceService {
     public PlaceEntityBean findById(int placeId) {
         Optional<PlaceEntity> result = placeRepository.findById(placeId);
         return new PlaceEntityBean(result.get());
+    }
+
+    /**
+     * IDから場所を削除する.
+     * @param placeId 場所ID
+     * @return 場所情報.
+     */
+    public Boolean delete(int placeId) {
+        placeRepository.deleteById(placeId);
+        return true;
     }
 }

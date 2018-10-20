@@ -1,7 +1,10 @@
 package boardmanagement.api.demo.manage.service.base;
 
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
+import boardmanagement.api.demo.manage.dto.UserRegisterDto;
+import boardmanagement.api.demo.manage.entity.PasswordEntity;
 import boardmanagement.api.demo.manage.entity.UserEntity;
+import boardmanagement.api.demo.manage.repository.PasswordRepository;
 import boardmanagement.api.demo.manage.repository.UserRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * ルームサービスクラス.
+ * ユーザサービスクラス.
  */
 @Service
 public class UserService {
@@ -21,9 +24,13 @@ public class UserService {
     @NonNull
     private final UserRepository userRepository;
 
+    @NonNull
+    private final PasswordRepository passwordRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordRepository passwordRepository) {
         this.userRepository = userRepository;
+        this.passwordRepository = passwordRepository;
     }
 
     /**
@@ -70,5 +77,21 @@ public class UserService {
      */
     public int countById(String id) {
         return userRepository.countById(id);
+    }
+
+    /**
+     * ユーザを作成する.
+     * @param user ユーザ情報
+     * @return 作成済ユーザ
+     */
+    public UserEntityBean register(UserRegisterDto user) {
+
+        UserEntity userEntity = new UserEntity(user.getId(), user.getName(), user.getAuthority());
+        UserEntity result = userRepository.save(userEntity);
+
+        PasswordEntity passwordEntity = new PasswordEntity(result.getId(), user.getPassword());
+        passwordRepository.save(passwordEntity);
+
+        return new UserEntityBean(result);
     }
 }
