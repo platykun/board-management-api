@@ -24,14 +24,14 @@ public class ResultEntity {
     private int id;
 
     /**
+     * 親結果ID
+     */
+    private int parentId;
+
+    /**
      * ユーザID
      */
     private String userId;
-
-    /**
-     * ルームID
-     */
-    private int roomId;
 
     /**
      * ボードゲームID.
@@ -52,11 +52,6 @@ public class ResultEntity {
      * 場所名.
      */
     private String placeName;
-
-    /**
-     * 順位.
-     */
-    private int rank;
 
     /**
      * スコア.

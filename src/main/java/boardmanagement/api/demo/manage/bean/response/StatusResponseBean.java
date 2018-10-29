@@ -1,6 +1,7 @@
-package boardmanagement.api.demo.manage.dto;
+package boardmanagement.api.demo.manage.bean.response;
 
 import boardmanagement.api.demo.common.bean.entity.ResultEntityBean;
+import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,12 +9,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 記録情報レスポンス用Dtoクラス.
+ * 記録情報レスポンス用Beanクラス.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserStatusResponseDto {
+public class StatusResponseBean {
 
     /**
      * チェックイン場所
@@ -35,4 +36,10 @@ public class UserStatusResponseDto {
      */
     private List<ResultEntityBean> allHistory;
 
+    public StatusResponseBean(UserStatusResponseDto dto) {
+        this.checkIn = dto.getCheckIn();
+        this.myHistory = dto.getMyHistory();
+        this.nearHistory = dto.getNearHistory();
+        this.allHistory = dto.getAllHistory();
+    }
 }

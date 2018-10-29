@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResultDto {
     /**
+     * 親ID.
+     */
+    private Integer parentId;
+
+    /**
      * ユーザID.
      */
     private String userId;
-
-    /**
-     * 順位.
-     */
-    private int rank;
 
     /**
      * スコア.

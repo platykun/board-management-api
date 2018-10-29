@@ -26,3 +26,5 @@ nbdist/
 .idea/
 target
 *.iml
+
+run.sh

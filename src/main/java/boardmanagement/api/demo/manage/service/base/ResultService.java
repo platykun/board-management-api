@@ -33,9 +33,8 @@ public class ResultService {
         // TODO: userIDからroomIDを取得する処理
 
         ResultEntity entity = new ResultEntity();
+        entity.setParentId(resultDto.getParentId());
         entity.setUserId(resultDto.getUserId());
-        entity.setRoomId(0);
-        entity.setRank(resultDto.getRank());
         entity.setScore(resultDto.getScore());
         entity.setComment(resultDto.getComment());
 
@@ -45,17 +44,40 @@ public class ResultService {
     }
 
     /**
+     * 場所IDから結果を取得する.
+     *
+     * @param page ページング
+     * @return 結果のリスト
+     */
+    public List<ResultEntityBean> findResults(int page) {
+        Pageable limit = PageRequest.of(page, FIND_LIMIT);
+        Page<ResultEntity> joinRoomEntities = resultRepository.findAll(limit);
+        return joinRoomEntities.stream().map(ResultEntityBean::new).collect(Collectors.toList());
+    }
+
+    /**
      * ユーザIDから結果を取得する.
      *
      * @param userId ユーザID
      * @param page ページング
      * @return 結果のリスト
      */
-    public List<ResultEntityBean> findResultByUserId(String userId, int page) {
-
+    public List<ResultEntityBean> findResultsByUserId(String userId, int page) {
         Pageable limit = PageRequest.of(page, FIND_LIMIT);
-        Page<ResultEntity> joinRoomEntities = resultRepository.findByUserId(limit, userId);
+        Page<ResultEntity> joinRoomEntities = resultRepository.findByUserIdOrderByCreateDesc(limit, userId);
+        return joinRoomEntities.stream().map(ResultEntityBean::new).collect(Collectors.toList());
+    }
 
+    /**
+     * 場所IDから結果を取得する.
+     *
+     * @param placeId 場所ID
+     * @param page ページング
+     * @return 結果のリスト
+     */
+    public List<ResultEntityBean> findResultsByPlaceId(int placeId, int page) {
+        Pageable limit = PageRequest.of(page, FIND_LIMIT);
+        Page<ResultEntity> joinRoomEntities = resultRepository.findByPlaceIdOrderByCreateDesc(limit, placeId);
         return joinRoomEntities.stream().map(ResultEntityBean::new).collect(Collectors.toList());
     }
 }

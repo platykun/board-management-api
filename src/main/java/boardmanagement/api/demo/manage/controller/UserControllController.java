@@ -2,7 +2,7 @@ package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
-import boardmanagement.api.demo.manage.bean.UserRequestBean;
+import boardmanagement.api.demo.manage.bean.request.UserRequestBean;
 import boardmanagement.api.demo.manage.service.base.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

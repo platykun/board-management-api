@@ -20,14 +20,14 @@ public class ResultEntityBean {
     private int id;
 
     /**
+     * 親ID
+     */
+    private int parentId;
+
+    /**
      * ユーザID
      */
     private String userId;
-
-    /**
-     * ルームID
-     */
-    private int roomId;
 
     /**
      * ボードゲームID.
@@ -50,11 +50,6 @@ public class ResultEntityBean {
     private String placeName;
 
     /**
-     * 順位.
-     */
-    private int rank;
-
-    /**
      * スコア.
      */
     private String score;
@@ -71,13 +66,12 @@ public class ResultEntityBean {
 
     public ResultEntityBean(ResultEntity entity) {
         this.id = entity.getId();
+        this.parentId = entity.getParentId();
         this.userId = entity.getUserId();
-        this.roomId = entity.getRoomId();
         this.boardGameId = entity.getBoardGameId();
         this.boardGameTitle = entity.getBoardGameTitle();
         this.placeId = entity.getPlaceId();
         this.placeName = entity.getPlaceName();
-        this.rank = entity.getRank();
         this.score = entity.getScore();
         this.comment = entity.getComment();
         this.create = entity.getCreate();
@@ -92,13 +86,12 @@ public class ResultEntityBean {
     public ResultEntity convertToEntity(ResultEntityBean bean) {
         return new ResultEntity(
                 bean.getId(),
+                bean.getParentId(),
                 bean.getUserId(),
-                bean.getRoomId(),
                 bean.getBoardGameId(),
                 bean.getBoardGameTitle(),
                 bean.getPlaceId(),
                 bean.getPlaceName(),
-                bean.getRank(),
                 bean.getScore(),
                 bean.getComment(),
                 bean.getCreate()

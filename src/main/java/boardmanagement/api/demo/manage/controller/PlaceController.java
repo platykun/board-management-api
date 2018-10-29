@@ -2,7 +2,7 @@ package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
-import boardmanagement.api.demo.manage.bean.PlaceRequestBean;
+import boardmanagement.api.demo.manage.bean.request.PlaceRequestBean;
 import boardmanagement.api.demo.manage.service.base.PlaceService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;

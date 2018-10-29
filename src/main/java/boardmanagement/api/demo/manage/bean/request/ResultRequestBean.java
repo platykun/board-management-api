@@ -1,4 +1,4 @@
-package boardmanagement.api.demo.manage.bean;
+package boardmanagement.api.demo.manage.bean.request;
 
 import boardmanagement.api.demo.manage.dto.ResultDto;
 import lombok.Data;
@@ -9,9 +9,9 @@ import lombok.Data;
 @Data
 public class ResultRequestBean {
     /**
-     * 順位.
+     * 親ID.
      */
-    private int rank;
+    private Integer parentId;
 
     /**
      * スコア.
@@ -28,6 +28,6 @@ public class ResultRequestBean {
      * @return ResultDto
      */
     public ResultDto toResultDto() {
-        return new ResultDto(null, this.rank, this.score, this.comment);
+        return new ResultDto(this.parentId, null, this.score, this.comment);
     }
 }

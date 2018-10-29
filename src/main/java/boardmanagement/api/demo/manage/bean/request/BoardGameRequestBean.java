@@ -1,4 +1,4 @@
-package boardmanagement.api.demo.manage.bean;
+package boardmanagement.api.demo.manage.bean.request;
 
 import boardmanagement.api.demo.common.bean.entity.BoardGameEntityBean;
 import lombok.AllArgsConstructor;

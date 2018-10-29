@@ -2,19 +2,15 @@ package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.*;
-import boardmanagement.api.demo.manage.bean.RoomRequestBean;
-import boardmanagement.api.demo.manage.bean.ResultRequestBean;
-import boardmanagement.api.demo.manage.bean.StatusResponseBean;
-import boardmanagement.api.demo.manage.dto.RegisterJoinRoomDto;
-import boardmanagement.api.demo.manage.dto.RoomDto;
+import boardmanagement.api.demo.manage.bean.request.ResultRequestBean;
+import boardmanagement.api.demo.manage.bean.response.StatusResponseBean;
 import boardmanagement.api.demo.manage.dto.ResultDto;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
-import boardmanagement.api.demo.manage.service.UserStatusService;
+import boardmanagement.api.demo.manage.service.StatusService;
 import boardmanagement.api.demo.manage.service.base.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +29,6 @@ public class UserController {
     UserService userService;
 
     /**
-     * ルームサービスクラス.
-     */
-    private final
-    RoomService roomService;
-
-    /**
      * チェックインサービスクラス.
      */
     private final
@@ -51,84 +41,15 @@ public class UserController {
     ResultService resultService;
 
     private final
-    UserStatusService userStatusService;
-
-    /**
-     * ルーム参加サービスクラス.
-     */
-    private final JoinRoomService joinRoomService;
+    StatusService statusService;
 
     @Autowired
-    public UserController(UserService userService, RoomService roomService, JoinRoomService joinRoomService, CheckInService checkInService, ResultService resultService,
-                          UserStatusService userStatusService) {
+    public UserController(UserService userService, CheckInService checkInService, ResultService resultService,
+                          StatusService statusService) {
         this.userService = userService;
-        this.roomService = roomService;
-        this.joinRoomService = joinRoomService;
         this.checkInService = checkInService;
         this.resultService = resultService;
-        this.userStatusService = userStatusService;
-    }
-
-    /**
-     * ルームを作成する.
-     * @param roomRequestBean ルーム情報
-     * @return 作成結果
-     */
-    @PutMapping(path="room/create")
-    SuccessBean<RoomEntityBean> createRoom(@RequestBody RoomRequestBean roomRequestBean){
-
-        RoomDto registerDto = roomRequestBean.toRegisterRoomDto();
-        RoomEntityBean result = roomService.register(registerDto);
-
-        return new SuccessBean<>(result);
-    }
-
-    /**
-     * ルームを更新する.
-     * @param roomRequestBean ルーム情報
-     * @return 作成結果
-     */
-    @PutMapping(path="room/{roomId:^[a-z0-9]+$}")
-    SuccessBean<RoomEntityBean> updateRoom(@PathVariable int roomId, @RequestBody RoomRequestBean roomRequestBean){
-
-        RoomDto updateDto = roomRequestBean.toRegisterRoomDtoWithId(roomId);
-
-        RoomEntityBean result = roomService.update(updateDto);
-
-        return new SuccessBean<>(result);
-    }
-
-    /**
-     * ルームを削除する.
-     * @param roomId ルームID
-     * @return 成功可否
-     */
-    @DeleteMapping(path="room/{roomId:^[a-z0-9]+$}")
-    SuccessBean<Boolean> deleteRoom(@PathVariable int roomId) {
-        Boolean result = roomService.delete(roomId);
-        return new SuccessBean<>(result);
-    }
-
-    /**
-     * ルームに参加する.
-     * @param roomId ルームID
-     * @return 参加後のルーム情報
-     */
-    @PutMapping("room/join/{roomId:^[a-z0-9]+$}")
-    SuccessBean<JoinRoomEntityBean> joinRoom(@PathVariable String roomId, Principal principal) {
-        // idのユーザをroomIdのルームへ登録させる.
-        Optional<UserEntityBean> loginUser = userService.getLoginUser();
-        if(!loginUser.isPresent()){
-            throw new IllegalArgumentException("no login user");
-        }
-
-        String userIdNum = loginUser.get().getId();
-        int roomIdNum = Integer.parseInt(roomId);
-        RegisterJoinRoomDto registerJoinRoomDto = new RegisterJoinRoomDto(userIdNum, roomIdNum, false);
-
-        JoinRoomEntityBean result = joinRoomService.register(registerJoinRoomDto);
-
-        return new SuccessBean<>(result);
+        this.statusService = statusService;
     }
 
     /**
@@ -190,30 +111,36 @@ public class UserController {
     }
 
     /**
-     * ログインユーザのステータス情報を取得する.
-     * @return ログインユーザのステータス情報
+     * 親の結果に紐づけて結果を記録する.
+     *
+     * @param resultRequestBean 結果登録情報
+     * @return 登録結果
      */
-    @GetMapping(path="status")
-    SuccessBean<StatusResponseBean> status(){
-        UserStatusResponseDto dto = userStatusService.getLoginUserStatus();
-        return new SuccessBean<>(new StatusResponseBean(dto));
-    }
-
-    /**
-     * ログインユーザの参加履歴を取得する.
-     * @param page ページング
-     * @return 参加履歴
-     */
-    @GetMapping(path="history/join/{page:^[a-z0-9]+$}")
-    public SuccessBean<List<JoinRoomEntityBean>> joinHistory(@PathVariable int page) {
+    @PutMapping(path="result/parent/{resultId:^[0-9]+$}")
+    SuccessBean<ResultEntityBean> resultWithParent(@RequestBody ResultRequestBean resultRequestBean, @PathVariable int resultId){
         Optional<UserEntityBean> loginUser = userService.getLoginUser();
         if(!loginUser.isPresent()){
             throw new IllegalArgumentException("no login user");
         }
 
-        List<JoinRoomEntityBean> joinHistory = joinRoomService.findJoinRoomByUserId(loginUser.get().getId(), page);
+        // TODO: ログインユーザ情報を取得してDtoに詰める作業はServiceの責務にする
+        ResultDto resultDto = resultRequestBean.toResultDto();
+        resultDto.setUserId(loginUser.get().getId());
+        resultDto.setParentId(resultId);
 
-        return new SuccessBean<>(joinHistory);
+        ResultEntityBean bean = resultService.register(resultDto);
+
+        return new SuccessBean<>(bean);
+    }
+
+    /**
+     * ログインユーザのステータス情報を取得する.
+     * @return ログインユーザのステータス情報
+     */
+    @GetMapping(path="status")
+    SuccessBean<StatusResponseBean> status(){
+        UserStatusResponseDto dto = statusService.getStatus();
+        return new SuccessBean<>(new StatusResponseBean(dto));
     }
 
     /**
@@ -245,7 +172,7 @@ public class UserController {
             throw new IllegalArgumentException("no login user");
         }
 
-        List<ResultEntityBean> resultHistory = resultService.findResultByUserId(loginUser.get().getId(), page);
+        List<ResultEntityBean> resultHistory = resultService.findResultsByUserId(loginUser.get().getId(), page);
         return new SuccessBean<>(resultHistory);
     }
 
