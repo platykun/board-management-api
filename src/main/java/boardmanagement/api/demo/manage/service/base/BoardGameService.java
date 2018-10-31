@@ -80,4 +80,20 @@ public class BoardGameService {
         return boardGameEntityBeanList;
     }
 
+    /**
+     * キーワードをもとにボードゲームを検索する.
+     * @param keyword 検索キーワード
+     * @return 条件に合致するボードゲーム情報
+     */
+    public List<BoardGameEntityBean> findByName(String keyword) {
+        Pageable limit = PageRequest.of(0, FIND_LIMIT);
+
+        Page<BoardGameEntity> resultEntityPage;
+        resultEntityPage = boardGameRepository.findByName(keyword, limit);
+
+        List<BoardGameEntityBean> resultBoardGames = new ArrayList<>();
+        resultEntityPage.forEach(r -> resultBoardGames.add(new BoardGameEntityBean(r)));
+
+        return resultBoardGames;
+    }
 }

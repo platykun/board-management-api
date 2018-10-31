@@ -77,6 +77,18 @@ public class BoardGameController {
 
         return new SuccessBean<>(boardGameEntityBeanList);
     }
+//    const url = `/boardGame/find/${name}`;
 
+    /**
+     * キーワードに合致したボードゲームを検索する.
+     * @param keyword キーワード
+     * @return ボードゲームリスト
+     */
+    @GetMapping("find/{keyword}")
+    public SuccessBean<List<BoardGameEntityBean>> find(@PathVariable String keyword) {
+        List<BoardGameEntityBean> boardGameEntityBeanList = boardGameService.findByName(keyword);
+
+        return new SuccessBean<>(boardGameEntityBeanList);
+    }
 }
 
