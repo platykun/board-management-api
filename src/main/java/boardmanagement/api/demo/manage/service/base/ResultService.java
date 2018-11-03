@@ -10,7 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -35,8 +37,13 @@ public class ResultService {
         ResultEntity entity = new ResultEntity();
         entity.setParentId(resultDto.getParentId());
         entity.setUserId(resultDto.getUserId());
+        entity.setBoardGameId(resultDto.getBoardGameId());
+        entity.setBoardGameTitle(resultDto.getBoardGameTitle());
+        entity.setPlaceId(resultDto.getPlaceId());
+        entity.setPlaceName(resultDto.getPlaceName());
         entity.setScore(resultDto.getScore());
         entity.setComment(resultDto.getComment());
+        entity.setCreate(new Date());
 
         ResultEntity result = resultRepository.save(entity);
 
@@ -79,5 +86,26 @@ public class ResultService {
         Pageable limit = PageRequest.of(page, FIND_LIMIT);
         Page<ResultEntity> joinRoomEntities = resultRepository.findByPlaceIdOrderByCreateDesc(limit, placeId);
         return joinRoomEntities.stream().map(ResultEntityBean::new).collect(Collectors.toList());
+    }
+
+    /**
+     * IDに紐付いた結果情報を取得する.
+     *
+     * @param id 結果ID
+     * @return 結果情報
+     */
+    public ResultEntityBean findResultsById(int id) {
+        return new ResultEntityBean(Objects.requireNonNull(resultRepository.findById(id).orElse(null)));
+    }
+
+    /**
+     * 指定された親IDを持つ結果情報を取得する.
+     * @param parentId 親ID
+     * @return 結果情報リスト
+     */
+    public List<ResultEntityBean> findChildResultById(int parentId) {
+        Pageable limit = PageRequest.of(0, FIND_LIMIT);
+        Page<ResultEntity> children = resultRepository.findByParentId(limit, parentId);
+        return children.stream().map(ResultEntityBean::new).collect(Collectors.toList());
     }
 }

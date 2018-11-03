@@ -14,6 +14,26 @@ public class ResultRequestBean {
     private Integer parentId;
 
     /**
+     * ボードゲームID.
+     */
+    private int boardGameId;
+
+    /**
+     * ボードゲームタイトル.
+     */
+    private String boardGameTitle;
+
+    /**
+     * 場所ID.
+     */
+    private int placeId;
+
+    /**
+     * 場所名.
+     */
+    private String placeName;
+
+    /**
      * スコア.
      */
     private String score;
@@ -28,6 +48,15 @@ public class ResultRequestBean {
      * @return ResultDto
      */
     public ResultDto toResultDto() {
-        return new ResultDto(this.parentId, null, this.score, this.comment);
+        return new ResultDto(
+                this.parentId,
+                null,
+                this.boardGameId,
+                this.boardGameTitle,
+                this.placeId,
+                this.placeName,
+                this.score,
+                this.comment
+        );
     }
 }

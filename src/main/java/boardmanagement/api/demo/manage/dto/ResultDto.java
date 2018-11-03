@@ -20,6 +20,25 @@ public class ResultDto {
      * ユーザID.
      */
     private String userId;
+    /**
+     * ボードゲームID.
+     */
+    private int boardGameId;
+
+    /**
+     * ボードゲームタイトル.
+     */
+    private String boardGameTitle;
+
+    /**
+     * 場所ID.
+     */
+    private int placeId;
+
+    /**
+     * 場所名.
+     */
+    private String placeName;
 
     /**
      * スコア.

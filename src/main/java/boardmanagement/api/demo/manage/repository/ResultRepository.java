@@ -19,4 +19,6 @@ public interface ResultRepository extends JpaRepository<ResultEntity, Integer> {
 
     // TODO: 日付順に並べ替える処理
     Page<ResultEntity> findAll(Pageable limit);
+
+    Page<ResultEntity> findByParentId(Pageable limit, int parentId);
 }

@@ -8,6 +8,8 @@ import boardmanagement.api.demo.manage.dto.ResultDto;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.service.StatusService;
 import boardmanagement.api.demo.manage.service.base.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -174,6 +176,26 @@ public class UserController {
 
         List<ResultEntityBean> resultHistory = resultService.findResultsByUserId(loginUser.get().getId(), page);
         return new SuccessBean<>(resultHistory);
+    }
+
+    /**
+     * 記録IDから記録情報を取得する.
+     * @param id 記録id.
+     * @return 記録情報
+     */
+    @GetMapping(path="history/result/parent/{id:^[0-9]+$}")
+    public SuccessBean<ResultResponse> getResultById(@PathVariable int id) {
+        ResultEntityBean resultHistory = resultService.findResultsById(id);
+        List<ResultEntityBean> resultChildHistories = resultService.findChildResultById(id);
+
+        return new SuccessBean<>(new ResultResponse(resultHistory, resultChildHistories));
+    }
+
+    @Data
+    @AllArgsConstructor
+    class ResultResponse {
+        ResultEntityBean parent;
+        List<ResultEntityBean> child;
     }
 
 }
