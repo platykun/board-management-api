@@ -1,7 +1,7 @@
 package boardmanagement.api.demo.manage.service.base;
 
 import boardmanagement.api.demo.common.bean.entity.ResultEntityBean;
-import boardmanagement.api.demo.manage.dto.ResultDto;
+import boardmanagement.api.demo.manage.dto.ResultRegistDto;
 import boardmanagement.api.demo.manage.entity.ResultEntity;
 import boardmanagement.api.demo.manage.repository.ResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +28,21 @@ public class ResultService {
     /**
      * 結果を登録する.
      *
-     * @param resultDto 結果情報
+     * @param resultRegistDto 結果情報
      * @return 結果登録結果
      */
-    public ResultEntityBean register(ResultDto resultDto) {
+    public ResultEntityBean register(ResultRegistDto resultRegistDto) {
         // TODO: userIDからroomIDを取得する処理
 
         ResultEntity entity = new ResultEntity();
-        entity.setParentId(resultDto.getParentId());
-        entity.setUserId(resultDto.getUserId());
-        entity.setBoardGameId(resultDto.getBoardGameId());
-        entity.setBoardGameTitle(resultDto.getBoardGameTitle());
-        entity.setPlaceId(resultDto.getPlaceId());
-        entity.setPlaceName(resultDto.getPlaceName());
-        entity.setScore(resultDto.getScore());
-        entity.setComment(resultDto.getComment());
+        entity.setParentId(resultRegistDto.getParentId());
+        entity.setUserId(resultRegistDto.getUserId());
+        entity.setBoardGameId(resultRegistDto.getBoardGameId());
+        entity.setBoardGameTitle(resultRegistDto.getBoardGameTitle());
+        entity.setPlaceId(resultRegistDto.getPlaceId());
+        entity.setPlaceName(resultRegistDto.getPlaceName());
+        entity.setScore(resultRegistDto.getScore());
+        entity.setComment(resultRegistDto.getComment());
         entity.setCreate(new Date());
 
         ResultEntity result = resultRepository.save(entity);
@@ -51,7 +51,7 @@ public class ResultService {
     }
 
     /**
-     * 場所IDから結果を取得する.
+     * 結果を取得する.
      *
      * @param page ページング
      * @return 結果のリスト
@@ -94,7 +94,7 @@ public class ResultService {
      * @param id 結果ID
      * @return 結果情報
      */
-    public ResultEntityBean findResultsById(int id) {
+    public ResultEntityBean findResultsByResultId(int id) {
         return new ResultEntityBean(Objects.requireNonNull(resultRepository.findById(id).orElse(null)));
     }
 

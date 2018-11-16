@@ -80,21 +80,20 @@ public class ResultEntityBean {
     /**
      * BeanクラスからEntityクラスへ変換する.
      *
-     * @param bean Beanクラス
      * @return Entityクラス
      */
-    public ResultEntity convertToEntity(ResultEntityBean bean) {
+    public ResultEntity toEntity() {
         return new ResultEntity(
-                bean.getId(),
-                bean.getParentId(),
-                bean.getUserId(),
-                bean.getBoardGameId(),
-                bean.getBoardGameTitle(),
-                bean.getPlaceId(),
-                bean.getPlaceName(),
-                bean.getScore(),
-                bean.getComment(),
-                bean.getCreate()
+                this.getId(),
+                this.getParentId(),
+                this.getUserId(),
+                this.getBoardGameId(),
+                this.getBoardGameTitle(),
+                this.getPlaceId(),
+                this.getPlaceName(),
+                this.getScore(),
+                this.getComment(),
+                this.getCreate()
         );
     }
 

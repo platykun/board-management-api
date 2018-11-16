@@ -22,7 +22,6 @@ public class UserEntity {
      * ユーザID.
      */
     @Id
-    @GeneratedValue
     private String id;
 
     /**

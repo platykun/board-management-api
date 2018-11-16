@@ -43,7 +43,7 @@ public class StatusService {
     public UserStatusResponseDto getStatus() {
 
         // ユーザが見つからなかった場合Optionalでexceptionが送出される
-        UserEntityBean loginUserBean = userService.getLoginUser().get();
+        UserEntityBean loginUserBean = userService.findLoginUserFronSession();
 
         // ログイン者のチェックイン情報.取得できなかった場合、-1を返却する.
         Optional<CheckInEntityBean> checkInEntityBean = checkInService.findLatestCheckin(loginUserBean.getId());

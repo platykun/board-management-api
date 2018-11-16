@@ -14,7 +14,6 @@ import static boardmanagement.api.demo.security.config.SecurityConstants.SIGNUP_
  */
 @RestController
 @CrossOrigin
-@RequestMapping("/user")
 public class UserControllController {
     // TODO: パスワード更新とかやる
 

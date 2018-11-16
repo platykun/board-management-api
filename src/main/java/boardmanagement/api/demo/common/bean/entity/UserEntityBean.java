@@ -36,10 +36,13 @@ public class UserEntityBean {
     /**
      * BeanクラスからEntityクラスへ変換する.
      *
-     * @param bean Beanクラス
      * @return Entityクラス
      */
-    public UserEntity convertToEntity(UserEntityBean bean) {
-        return new UserEntity(bean.getId(), bean.getName(), bean.getAuthority());
+    public UserEntity toEntity() {
+        return new UserEntity(
+                this.getId(),
+                this.getName(),
+                this.getAuthority()
+        );
     }
 }

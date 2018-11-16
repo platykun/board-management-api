@@ -77,7 +77,6 @@ public class BoardGameController {
 
         return new SuccessBean<>(boardGameEntityBeanList);
     }
-//    const url = `/boardGame/find/${name}`;
 
     /**
      * キーワードに合致したボードゲームを検索する.

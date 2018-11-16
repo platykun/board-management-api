@@ -30,10 +30,9 @@ public class PasswordEntityBean {
     /**
      * BeanクラスからEntityクラスへ変換する.
      *
-     * @param bean Beanクラス
      * @return Entityクラス
      */
-    public PasswordEntity convertToEntity(PasswordEntityBean bean) {
-        return new PasswordEntity(bean.getUserId(), bean.getPassword());
+    public PasswordEntity toEntity() {
+        return new PasswordEntity(this.getUserId(), this.getPassword());
     }
 }

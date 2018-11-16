@@ -19,7 +19,6 @@ import java.util.Optional;
  */
 @Service
 public class UserService {
-    private static final int FIND_LIMIT = 100;
 
     @NonNull
     private final UserRepository userRepository;
@@ -35,13 +34,21 @@ public class UserService {
 
     /**
      * セッション情報からログインユーザを取得する.
+     * ログインユーザが取得できなかった場合、IllegalArgumentExcepiton.
+     * セッションにログインユーザが存在するかどうか不透明な場合、存在チェックをかけていることが前提となる.
+     *
      * @return ログインユーザ
      */
-    public Optional<UserEntityBean> getLoginUser() {
+    public UserEntityBean findLoginUserFronSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = (String) authentication.getPrincipal();
 
-        return  userRepository.findById(userName).map(UserEntityBean::new);
+        Optional<UserEntityBean> loginUser = userRepository.findById(userName).map(UserEntityBean::new);
+        if(!loginUser.isPresent()){
+            throw new IllegalArgumentException("cant find login user");
+        }
+
+        return loginUser.get();
     }
 
     /**

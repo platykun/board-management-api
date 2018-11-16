@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultDto {
+public class ResultRegistDto {
     /**
      * 親ID.
      */

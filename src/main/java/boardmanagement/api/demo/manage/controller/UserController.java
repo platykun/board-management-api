@@ -4,7 +4,7 @@ import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.*;
 import boardmanagement.api.demo.manage.bean.request.ResultRequestBean;
 import boardmanagement.api.demo.manage.bean.response.StatusResponseBean;
-import boardmanagement.api.demo.manage.dto.ResultDto;
+import boardmanagement.api.demo.manage.dto.ResultRegistDto;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.service.StatusService;
 import boardmanagement.api.demo.manage.service.base.*;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * ユーザコントローラー
@@ -42,6 +41,9 @@ public class UserController {
     private final
     ResultService resultService;
 
+    /**
+     * ユーザステータス情報取得サービスクラス.
+     */
     private final
     StatusService statusService;
 
@@ -62,13 +64,11 @@ public class UserController {
      */
     @PutMapping(path="checkin/{placeId}")
     SuccessBean<CheckInEntityBean> checkin(@PathVariable int placeId){
-        Optional<UserEntityBean> loginUser = userService.getLoginUser();
-        if(!loginUser.isPresent()){
-            throw new IllegalArgumentException("no login user");
-        }
+        UserEntityBean loginUser = userService.findLoginUserFronSession();
+
         //TODO: チェックイン中のものはチェックアウト
 
-        CheckInEntityBean registerdBean = checkInService.checkIn(loginUser.get().getId(), placeId);
+        CheckInEntityBean registerdBean = checkInService.checkIn(loginUser.getId(), placeId);
 
         return new SuccessBean<>(registerdBean);
     }
@@ -80,12 +80,9 @@ public class UserController {
      */
     @PutMapping(path="checkout")
     SuccessBean<Integer> checkout(){
-        Optional<UserEntityBean> loginUser = userService.getLoginUser();
-        if(!loginUser.isPresent()){
-            throw new IllegalArgumentException("no login user");
-        }
+        UserEntityBean loginUser = userService.findLoginUserFronSession();
 
-        Integer updateCount = checkInService.checkout(loginUser.get().getId());
+        Integer updateCount = checkInService.checkout(loginUser.getId());
 
         return new SuccessBean<>(updateCount);
     }
@@ -98,16 +95,13 @@ public class UserController {
      */
     @PutMapping(path="result")
     SuccessBean<ResultEntityBean> result(@RequestBody ResultRequestBean resultRequestBean){
-        Optional<UserEntityBean> loginUser = userService.getLoginUser();
-        if(!loginUser.isPresent()){
-            throw new IllegalArgumentException("no login user");
-        }
+        UserEntityBean loginUser = userService.findLoginUserFronSession();
 
         // TODO: ログインユーザ情報を取得してDtoに詰める作業はServiceの責務にする
-        ResultDto resultDto = resultRequestBean.toResultDto();
-        resultDto.setUserId(loginUser.get().getId());
+        ResultRegistDto resultRegistDto = resultRequestBean.toResultDto();
+        resultRegistDto.setUserId(loginUser.getId());
 
-        ResultEntityBean bean = resultService.register(resultDto);
+        ResultEntityBean bean = resultService.register(resultRegistDto);
 
         return new SuccessBean<>(bean);
     }
@@ -120,17 +114,14 @@ public class UserController {
      */
     @PutMapping(path="result/parent/{resultId:^[0-9]+$}")
     SuccessBean<ResultEntityBean> resultWithParent(@RequestBody ResultRequestBean resultRequestBean, @PathVariable int resultId){
-        Optional<UserEntityBean> loginUser = userService.getLoginUser();
-        if(!loginUser.isPresent()){
-            throw new IllegalArgumentException("no login user");
-        }
+        UserEntityBean loginUser = userService.findLoginUserFronSession();
 
         // TODO: ログインユーザ情報を取得してDtoに詰める作業はServiceの責務にする
-        ResultDto resultDto = resultRequestBean.toResultDto();
-        resultDto.setUserId(loginUser.get().getId());
-        resultDto.setParentId(resultId);
+        ResultRegistDto resultRegistDto = resultRequestBean.toResultDto();
+        resultRegistDto.setUserId(loginUser.getId());
+        resultRegistDto.setParentId(resultId);
 
-        ResultEntityBean bean = resultService.register(resultDto);
+        ResultEntityBean bean = resultService.register(resultRegistDto);
 
         return new SuccessBean<>(bean);
     }
@@ -152,12 +143,8 @@ public class UserController {
      */
     @GetMapping(path="history/checkin/{page:^[a-z0-9]+$}")
     public SuccessBean<List<CheckInEntityBean>> checkInHistory(@PathVariable int page) {
-        Optional<UserEntityBean> loginUser = userService.getLoginUser();
-        if(!loginUser.isPresent()){
-            throw new IllegalArgumentException("no login user");
-        }
-
-        List<CheckInEntityBean> checkInHistory = checkInService.findCheckInByUserId(loginUser.get().getId(), page);
+        UserEntityBean loginUser = userService.findLoginUserFronSession();
+        List<CheckInEntityBean> checkInHistory = checkInService.findCheckInByUserId(loginUser.getId(), page);
 
         return new SuccessBean<>(checkInHistory);
     }
@@ -169,12 +156,9 @@ public class UserController {
      */
     @GetMapping(path="history/result/{page:^[a-z0-9]+$}")
     public SuccessBean<List<ResultEntityBean>> resultHistory(@PathVariable int page) {
-        Optional<UserEntityBean> loginUser = userService.getLoginUser();
-        if(!loginUser.isPresent()){
-            throw new IllegalArgumentException("no login user");
-        }
+        UserEntityBean loginUser = userService.findLoginUserFronSession();
 
-        List<ResultEntityBean> resultHistory = resultService.findResultsByUserId(loginUser.get().getId(), page);
+        List<ResultEntityBean> resultHistory = resultService.findResultsByUserId(loginUser.getId(), page);
         return new SuccessBean<>(resultHistory);
     }
 
@@ -185,7 +169,7 @@ public class UserController {
      */
     @GetMapping(path="history/result/parent/{id:^[0-9]+$}")
     public SuccessBean<ResultResponse> getResultById(@PathVariable int id) {
-        ResultEntityBean resultHistory = resultService.findResultsById(id);
+        ResultEntityBean resultHistory = resultService.findResultsByResultId(id);
         List<ResultEntityBean> resultChildHistories = resultService.findChildResultById(id);
 
         return new SuccessBean<>(new ResultResponse(resultHistory, resultChildHistories));

@@ -1,6 +1,5 @@
 package boardmanagement.api.demo.security.config;
 
-import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**

@@ -1,6 +1,6 @@
 package boardmanagement.api.demo.manage.bean.request;
 
-import boardmanagement.api.demo.manage.dto.ResultDto;
+import boardmanagement.api.demo.manage.dto.ResultRegistDto;
 import lombok.Data;
 
 /**
@@ -45,10 +45,10 @@ public class ResultRequestBean {
 
     /**
      * ResultDtoに変換する.
-     * @return ResultDto
+     * @return ResultRegistDto
      */
-    public ResultDto toResultDto() {
-        return new ResultDto(
+    public ResultRegistDto toResultDto() {
+        return new ResultRegistDto(
                 this.parentId,
                 null,
                 this.boardGameId,
