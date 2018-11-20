@@ -1,18 +1,19 @@
 package boardmanagement.api.demo.manage.service.base;
 
-import boardmanagement.api.demo.common.bean.entity.ResultEntityBean;
+import boardmanagement.api.demo.manage.bean.response.ResultResponseBean;
+import boardmanagement.api.demo.manage.bean.response.UserResultResponseBean;
 import boardmanagement.api.demo.manage.dto.ResultRegistDto;
+import boardmanagement.api.demo.manage.dto.UserResultRegistDto;
 import boardmanagement.api.demo.manage.entity.ResultEntity;
+import boardmanagement.api.demo.manage.entity.UserResultEntity;
 import boardmanagement.api.demo.manage.repository.ResultRepository;
+import boardmanagement.api.demo.manage.repository.UserResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,29 +26,46 @@ public class ResultService {
     @Autowired
     ResultRepository resultRepository;
 
+    @Autowired
+    UserResultRepository userResultRepository;
+
     /**
-     * 結果を登録する.
+     * 結果を新規登録する.
      *
      * @param resultRegistDto 結果情報
      * @return 結果登録結果
      */
-    public ResultEntityBean register(ResultRegistDto resultRegistDto) {
+    public ResultResponseBean register(ResultRegistDto resultRegistDto) {
         // TODO: userIDからroomIDを取得する処理
 
-        ResultEntity entity = new ResultEntity();
-        entity.setParentId(resultRegistDto.getParentId());
-        entity.setUserId(resultRegistDto.getUserId());
-        entity.setBoardGameId(resultRegistDto.getBoardGameId());
-        entity.setBoardGameTitle(resultRegistDto.getBoardGameTitle());
-        entity.setPlaceId(resultRegistDto.getPlaceId());
-        entity.setPlaceName(resultRegistDto.getPlaceName());
-        entity.setScore(resultRegistDto.getScore());
-        entity.setComment(resultRegistDto.getComment());
-        entity.setCreate(new Date());
+        ResultEntity entity = new ResultEntity(
+                0,
+                resultRegistDto.getBoardGameId(),
+                resultRegistDto.getBoardGameTitle(),
+                resultRegistDto.getPlaceId(),
+                resultRegistDto.getPlaceName(),
+                new Date()
+        );
 
         ResultEntity result = resultRepository.save(entity);
+        int resultId = result.getId();
 
-        return new ResultEntityBean(result);
+        List<UserResultRegistDto> userResultList = resultRegistDto.getUserResultList();
+
+        List<UserResultEntity> userResultResultList = new ArrayList<>();
+        userResultList.forEach(u -> {
+            UserResultEntity userResultEntity = new UserResultEntity(
+                    0,
+                    resultId,
+                    u.getUserId(),
+                    u.getScore(),
+                    u.getComment()
+            );
+            UserResultEntity r = userResultRepository.save(userResultEntity);
+            userResultResultList.add(r);
+        });
+
+        return new ResultResponseBean(result, userResultResultList);
     }
 
     /**
@@ -56,10 +74,11 @@ public class ResultService {
      * @param page ページング
      * @return 結果のリスト
      */
-    public List<ResultEntityBean> findResults(int page) {
+    public List<ResultEntity> findResults(int page) {
         Pageable limit = PageRequest.of(page, FIND_LIMIT);
-        Page<ResultEntity> joinRoomEntities = resultRepository.findAll(limit);
-        return joinRoomEntities.stream().map(ResultEntityBean::new).collect(Collectors.toList());
+        return resultRepository.findAll(limit)
+                .stream()
+                .collect(Collectors.toList());
     }
 
     /**
@@ -69,23 +88,28 @@ public class ResultService {
      * @param page ページング
      * @return 結果のリスト
      */
-    public List<ResultEntityBean> findResultsByUserId(String userId, int page) {
+    public List<ResultResponseBean> findResultsByUserId(String userId, int page) {
         Pageable limit = PageRequest.of(page, FIND_LIMIT);
-        Page<ResultEntity> joinRoomEntities = resultRepository.findByUserIdOrderByCreateDesc(limit, userId);
-        return joinRoomEntities.stream().map(ResultEntityBean::new).collect(Collectors.toList());
-    }
 
-    /**
-     * 場所IDから結果を取得する.
-     *
-     * @param placeId 場所ID
-     * @param page ページング
-     * @return 結果のリスト
-     */
-    public List<ResultEntityBean> findResultsByPlaceId(int placeId, int page) {
-        Pageable limit = PageRequest.of(page, FIND_LIMIT);
-        Page<ResultEntity> joinRoomEntities = resultRepository.findByPlaceIdOrderByCreateDesc(limit, placeId);
-        return joinRoomEntities.stream().map(ResultEntityBean::new).collect(Collectors.toList());
+        List<UserResultEntity> userResultList = userResultRepository.findByUserId(limit, userId);
+
+        List<ResultEntity> joinedResults = userResultList
+                .stream()
+                .map(u -> resultRepository.findById(u.getResultId()).get())
+                .collect(Collectors.toList());
+
+        return joinedResults
+                .stream()
+                .map(j -> {
+                    // ユーザIDに紐づく結果ごとに、関連するユーザごとの結果を取得する.
+                    int resultId = j.getId();
+                    List<UserResultEntity> userResultEntityList = userResultRepository.findByResultId(resultId);
+                    return new ResultResponseBean(
+                            j,
+                            userResultEntityList
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -94,18 +118,103 @@ public class ResultService {
      * @param id 結果ID
      * @return 結果情報
      */
-    public ResultEntityBean findResultsByResultId(int id) {
-        return new ResultEntityBean(Objects.requireNonNull(resultRepository.findById(id).orElse(null)));
+    public ResultResponseBean findResultsByResultId(int id) {
+
+        Pageable limit = PageRequest.of(0, FIND_LIMIT);
+        Optional<ResultEntity> result = resultRepository.findById(id);
+
+        List<UserResultEntity> userResultEntityList = userResultRepository.findByResultId(id);
+
+        return new ResultResponseBean(result.get(), userResultEntityList);
+    }
+
+
+    /**
+     * ユーザごとの結果を登録する.
+     *
+     * @param resultId 結果ID
+     * @param userResultRegistDto ユーザごとの結果情報
+     * @return 登録結果
+     */
+    public UserResultResponseBean registUserResult(int resultId, UserResultRegistDto userResultRegistDto) {
+        UserResultEntity data = new UserResultEntity(
+                0,
+                resultId,
+                userResultRegistDto.getUserId(),
+                userResultRegistDto.getScore(),
+                userResultRegistDto.getComment()
+        );
+
+        UserResultEntity result = userResultRepository.save(data);
+
+        return new UserResultResponseBean(result);
     }
 
     /**
-     * 指定された親IDを持つ結果情報を取得する.
-     * @param parentId 親ID
-     * @return 結果情報リスト
+     * ユーザごとの結果を更新する.
+     *
+     * @param resultId 更新ID
+     * @param userResultRegistDto ユーザごとの結果情報
+     * @return 登録結果
      */
-    public List<ResultEntityBean> findChildResultById(int parentId) {
+    public UserResultResponseBean updateUserResult(int id, int resultId, UserResultRegistDto userResultRegistDto) {
+        UserResultEntity data = new UserResultEntity(
+                id,
+                resultId,
+                userResultRegistDto.getUserId(),
+                userResultRegistDto.getScore(),
+                userResultRegistDto.getComment()
+        );
+
+        UserResultEntity result = userResultRepository.save(data);
+
+        return new UserResultResponseBean(result);
+    }
+
+    /**
+     * ユーザごとの結果を削除する.
+     *
+     * @param id ID
+     * @return 削除結果
+     */
+    public Boolean deleteUserResult(int id) {
+
+        UserResultEntity data = new UserResultEntity(
+                id,
+                0,
+                null,
+                null,
+                null
+        );
+
+        userResultRepository.delete(data);
+
+        return true;
+    }
+
+    /**
+     * ユーザIDに紐付いた記録概要一覧を取得.
+     * @param userId ユーザID
+     * @return 記録概要
+     */
+    public List<ResultEntity> findResultOutlineByUserId(String userId) {
         Pageable limit = PageRequest.of(0, FIND_LIMIT);
-        Page<ResultEntity> children = resultRepository.findByParentId(limit, parentId);
-        return children.stream().map(ResultEntityBean::new).collect(Collectors.toList());
+        List<UserResultEntity> userResultList = userResultRepository.findByUserId(limit, userId);
+        return userResultList
+                .stream()
+                .map(u -> resultRepository.findById(u.getResultId()).get())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 場所IDに紐づく記録概要一覧を取得する.
+     * @param placeId 場所ID
+     * @return 記録概要
+     */
+    public List<ResultEntity> findResultOutlineByPlaceId(int placeId) {
+        Pageable limit = PageRequest.of(0, FIND_LIMIT);
+        return resultRepository.findByPlaceIdOrderByCreateDesc(limit, placeId)
+                .stream()
+                .collect(Collectors.toList());
     }
 }

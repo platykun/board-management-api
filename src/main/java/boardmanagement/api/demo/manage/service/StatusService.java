@@ -1,9 +1,9 @@
 package boardmanagement.api.demo.manage.service;
 
 import boardmanagement.api.demo.common.bean.entity.CheckInEntityBean;
-import boardmanagement.api.demo.common.bean.entity.ResultEntityBean;
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
+import boardmanagement.api.demo.manage.entity.ResultEntity;
 import boardmanagement.api.demo.manage.service.base.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +52,10 @@ public class StatusService {
 
         // ステータス情報を取得する.
         String placeName = checkInEntityBean.map(c -> placeService.findById(c.getPlaceId()).getName()).orElse("");
-        List<ResultEntityBean> myHistory = resultService.findResultsByUserId(loginUserBean.getId(), 0);
-        List<ResultEntityBean> nearHistory = resultService.findResultsByPlaceId(placeId, 0);
-        List<ResultEntityBean> allHistory = resultService.findResults(0);
+
+        List<ResultEntity> myHistory = resultService.findResultOutlineByUserId(loginUserBean.getId());
+        List<ResultEntity> nearHistory = resultService.findResultOutlineByPlaceId(placeId);
+        List<ResultEntity> allHistory = resultService.findResults(0);
 
         return new UserStatusResponseDto(placeName, myHistory, nearHistory, allHistory);
     }

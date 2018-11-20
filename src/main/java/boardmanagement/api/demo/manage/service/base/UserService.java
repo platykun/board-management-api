@@ -8,10 +8,15 @@ import boardmanagement.api.demo.manage.repository.PasswordRepository;
 import boardmanagement.api.demo.manage.repository.UserRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -19,6 +24,7 @@ import java.util.Optional;
  */
 @Service
 public class UserService {
+    private static final int FIND_LIMIT = 100;
 
     @NonNull
     private final UserRepository userRepository;
@@ -100,5 +106,23 @@ public class UserService {
         passwordRepository.save(passwordEntity);
 
         return new UserEntityBean(result);
+    }
+
+    /**
+     * キーワードをもとにユーザを検索する.
+     *
+     * @param keyword キーワード
+     * @return ユーザ一覧
+     */
+    public List<UserEntityBean> findLikeId(String keyword) {
+        Pageable limit = PageRequest.of(0, FIND_LIMIT);
+
+        Page<UserEntity> userEntityPage;
+        userEntityPage = userRepository.findLikeId(keyword, limit);
+
+        List<UserEntityBean> users = new ArrayList<>();
+        userEntityPage.forEach(r -> users.add(new UserEntityBean(r)));
+
+        return users;
     }
 }

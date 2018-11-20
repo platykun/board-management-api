@@ -20,16 +20,6 @@ public class ResultEntityBean {
     private int id;
 
     /**
-     * 親ID
-     */
-    private int parentId;
-
-    /**
-     * ユーザID
-     */
-    private String userId;
-
-    /**
      * ボードゲームID.
      */
     private int boardGameId;
@@ -50,30 +40,16 @@ public class ResultEntityBean {
     private String placeName;
 
     /**
-     * スコア.
-     */
-    private String score;
-
-    /**
-     * コメント.
-     */
-    private String comment;
-
-    /**
      * 作成日.
      */
     private Date create;
 
     public ResultEntityBean(ResultEntity entity) {
         this.id = entity.getId();
-        this.parentId = entity.getParentId();
-        this.userId = entity.getUserId();
         this.boardGameId = entity.getBoardGameId();
         this.boardGameTitle = entity.getBoardGameTitle();
         this.placeId = entity.getPlaceId();
         this.placeName = entity.getPlaceName();
-        this.score = entity.getScore();
-        this.comment = entity.getComment();
         this.create = entity.getCreate();
     }
 
@@ -84,16 +60,12 @@ public class ResultEntityBean {
      */
     public ResultEntity toEntity() {
         return new ResultEntity(
-                this.getId(),
-                this.getParentId(),
-                this.getUserId(),
-                this.getBoardGameId(),
-                this.getBoardGameTitle(),
-                this.getPlaceId(),
-                this.getPlaceName(),
-                this.getScore(),
-                this.getComment(),
-                this.getCreate()
+                this.id,
+                this.boardGameId,
+                this.boardGameTitle,
+                this.placeId,
+                this.placeName,
+                this.create
         );
     }
 

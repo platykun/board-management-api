@@ -1,18 +1,17 @@
 package boardmanagement.api.demo.manage.bean.request;
 
 import boardmanagement.api.demo.manage.dto.ResultRegistDto;
+import boardmanagement.api.demo.manage.dto.UserResultRegistDto;
 import lombok.Data;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 結果登録用Beanクラス.
  */
 @Data
 public class ResultRequestBean {
-    /**
-     * 親ID.
-     */
-    private Integer parentId;
-
     /**
      * ボードゲームID.
      */
@@ -34,29 +33,23 @@ public class ResultRequestBean {
     private String placeName;
 
     /**
-     * スコア.
+     * ユーザごとの結果情報.
      */
-    private String score;
-
-    /**
-     * コメント.
-     */
-    private String comment;
+    private List<UserResultRequestBean> userList;
 
     /**
      * ResultDtoに変換する.
      * @return ResultRegistDto
      */
     public ResultRegistDto toResultDto() {
+        List<UserResultRegistDto> userDtoList = userList.stream().map(u -> u.toResultDto()).collect(Collectors.toList());
+
         return new ResultRegistDto(
-                this.parentId,
-                null,
                 this.boardGameId,
                 this.boardGameTitle,
                 this.placeId,
                 this.placeName,
-                this.score,
-                this.comment
+                userDtoList
         );
     }
 }

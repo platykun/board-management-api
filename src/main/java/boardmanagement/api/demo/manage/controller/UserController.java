@@ -3,13 +3,13 @@ package boardmanagement.api.demo.manage.controller;
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.*;
 import boardmanagement.api.demo.manage.bean.request.ResultRequestBean;
+import boardmanagement.api.demo.manage.bean.request.UserResultRequestBean;
+import boardmanagement.api.demo.manage.bean.response.ResultResponseBean;
 import boardmanagement.api.demo.manage.bean.response.StatusResponseBean;
-import boardmanagement.api.demo.manage.dto.ResultRegistDto;
+import boardmanagement.api.demo.manage.bean.response.UserResultResponseBean;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.service.StatusService;
 import boardmanagement.api.demo.manage.service.base.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,36 +94,55 @@ public class UserController {
      * @return 登録結果
      */
     @PutMapping(path="result")
-    SuccessBean<ResultEntityBean> result(@RequestBody ResultRequestBean resultRequestBean){
-        UserEntityBean loginUser = userService.findLoginUserFronSession();
+    SuccessBean<ResultResponseBean> result(@RequestBody ResultRequestBean resultRequestBean){
 
-        // TODO: ログインユーザ情報を取得してDtoに詰める作業はServiceの責務にする
-        ResultRegistDto resultRegistDto = resultRequestBean.toResultDto();
-        resultRegistDto.setUserId(loginUser.getId());
+        ResultResponseBean bean = resultService.register(resultRequestBean.toResultDto());
+        return new SuccessBean<>(bean);
+    }
 
-        ResultEntityBean bean = resultService.register(resultRegistDto);
+    /**
+     * ユーザごとの結果を記録する.
+     *
+     * @param userResultRequestBean 結果登録情報
+     * @param id ID
+     * @return 登録結果
+     */
+    @PutMapping(path="result/{id:^[0-9]+$}/new")
+    SuccessBean<UserResultResponseBean> userResultNew(@RequestBody UserResultRequestBean userResultRequestBean, @PathVariable int id){
+
+        UserResultResponseBean bean = resultService.registUserResult(id, userResultRequestBean.toResultDto());
 
         return new SuccessBean<>(bean);
     }
 
     /**
-     * 親の結果に紐づけて結果を記録する.
+     * ユーザごとの結果を記録する.
      *
-     * @param resultRequestBean 結果登録情報
+     * @param userResultRequestBean 結果登録情報
+     * @param id ID
      * @return 登録結果
      */
-    @PutMapping(path="result/parent/{resultId:^[0-9]+$}")
-    SuccessBean<ResultEntityBean> resultWithParent(@RequestBody ResultRequestBean resultRequestBean, @PathVariable int resultId){
-        UserEntityBean loginUser = userService.findLoginUserFronSession();
+    @PutMapping(path="result/{id:^[0-9]+$}/{resultId:^[0-9]+$}")
+    SuccessBean<UserResultResponseBean> userResultUpdate(@RequestBody UserResultRequestBean userResultRequestBean,
+                                                         @PathVariable("id") int id, @PathVariable("resultId") int resultId){
 
-        // TODO: ログインユーザ情報を取得してDtoに詰める作業はServiceの責務にする
-        ResultRegistDto resultRegistDto = resultRequestBean.toResultDto();
-        resultRegistDto.setUserId(loginUser.getId());
-        resultRegistDto.setParentId(resultId);
-
-        ResultEntityBean bean = resultService.register(resultRegistDto);
+        UserResultResponseBean bean = resultService.updateUserResult(id, resultId, userResultRequestBean.toResultDto());
 
         return new SuccessBean<>(bean);
+    }
+
+    /**
+     * ユーザごとの結果を記録する.
+     *
+     * @param id ID
+     * @return 登録結果
+     */
+    @DeleteMapping(path="result/{id:^[0-9]+$}")
+    SuccessBean<Boolean> userResultDelete(@PathVariable int id){
+
+        Boolean result = resultService.deleteUserResult(id);
+
+        return new SuccessBean<>(result);
     }
 
     /**
@@ -154,11 +173,11 @@ public class UserController {
      * @param page ページング
      * @return 結果履歴
      */
-    @GetMapping(path="history/result/{page:^[a-z0-9]+$}")
-    public SuccessBean<List<ResultEntityBean>> resultHistory(@PathVariable int page) {
+    @GetMapping(path="history/myresult/{page:^[a-z0-9]+$}")
+    public SuccessBean<List<ResultResponseBean>> resultHistory(@PathVariable int page) {
         UserEntityBean loginUser = userService.findLoginUserFronSession();
 
-        List<ResultEntityBean> resultHistory = resultService.findResultsByUserId(loginUser.getId(), page);
+        List<ResultResponseBean> resultHistory = resultService.findResultsByUserId(loginUser.getId(), page);
         return new SuccessBean<>(resultHistory);
     }
 
@@ -167,20 +186,11 @@ public class UserController {
      * @param id 記録id.
      * @return 記録情報
      */
-    @GetMapping(path="history/result/parent/{id:^[0-9]+$}")
-    public SuccessBean<ResultResponse> getResultById(@PathVariable int id) {
-        ResultEntityBean resultHistory = resultService.findResultsByResultId(id);
-        List<ResultEntityBean> resultChildHistories = resultService.findChildResultById(id);
+    @GetMapping(path="history/result/{id:^[0-9]+$}")
+    public SuccessBean<ResultResponseBean> getResultById(@PathVariable int id) {
+        ResultResponseBean resultHistory = resultService.findResultsByResultId(id);
 
-        return new SuccessBean<>(new ResultResponse(resultHistory, resultChildHistories));
+        return new SuccessBean<>(resultHistory);
     }
-
-    @Data
-    @AllArgsConstructor
-    class ResultResponse {
-        ResultEntityBean parent;
-        List<ResultEntityBean> child;
-    }
-
 }
 

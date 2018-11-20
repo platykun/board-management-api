@@ -44,6 +44,19 @@ public class PlaceController {
     }
 
     /**
+     * 場所を取得する.
+     *
+     * @param placeId 場所ID
+     * @return 更新結果情報
+     */
+    @GetMapping("find/id/{placeId:^[0-9]+$}")
+    public SuccessBean<PlaceEntityBean> getPlace(@PathVariable int placeId) {
+        PlaceEntityBean result = placeService.findById(placeId);
+
+        return new SuccessBean<>(result);
+    }
+
+    /**
      * 場所を更新する.
      *
      * @param placeUpdateRequestBean 更新情報

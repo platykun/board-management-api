@@ -11,7 +11,7 @@ import java.util.Date;
  * 結果テーブル.
  */
 @Entity
-@Table(name = "result")
+@Table(name = "RESULT")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,16 +22,6 @@ public class ResultEntity {
     @Id
     @GeneratedValue
     private int id;
-
-    /**
-     * 親結果ID
-     */
-    private int parentId;
-
-    /**
-     * ユーザID
-     */
-    private String userId;
 
     /**
      * ボードゲームID.
@@ -52,16 +42,6 @@ public class ResultEntity {
      * 場所名.
      */
     private String placeName;
-
-    /**
-     * スコア.
-     */
-    private String score;
-
-    /**
-     * コメント.
-     */
-    private String comment;
 
     /**
      * 作成日.

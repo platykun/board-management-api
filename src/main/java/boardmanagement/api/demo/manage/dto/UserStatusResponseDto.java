@@ -1,6 +1,6 @@
 package boardmanagement.api.demo.manage.dto;
 
-import boardmanagement.api.demo.common.bean.entity.ResultEntityBean;
+import boardmanagement.api.demo.manage.entity.ResultEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,16 +23,16 @@ public class UserStatusResponseDto {
     /**
      * 自分の過去の履歴情報.
      */
-    private List<ResultEntityBean> myHistory;
+    private List<ResultEntity> myHistory;
 
     /**
      * チェックイン場所の履歴情報.
      */
-    private List<ResultEntityBean> nearHistory;
+    private List<ResultEntity> nearHistory;
 
     /**
      * すべての履歴情報.
      */
-    private List<ResultEntityBean> allHistory;
+    private List<ResultEntity> allHistory;
 
 }

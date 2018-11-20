@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 結果登録用Dtoクラス.
  */
@@ -11,15 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResultRegistDto {
-    /**
-     * 親ID.
-     */
-    private Integer parentId;
-
-    /**
-     * ユーザID.
-     */
-    private String userId;
     /**
      * ボードゲームID.
      */
@@ -41,12 +34,8 @@ public class ResultRegistDto {
     private String placeName;
 
     /**
-     * スコア.
+     * ユーザ結果リスト.
      */
-    private String score;
+    private List<UserResultRegistDto> userResultList;
 
-    /**
-     * コメント.
-     */
-    private String comment;
 }

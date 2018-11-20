@@ -11,14 +11,8 @@ import java.util.Optional;
  * 記録リポジトリ.
  */
 public interface ResultRepository extends JpaRepository<ResultEntity, Integer> {
-    Page<ResultEntity> findByUserId(Pageable limit, String userId);
-
-    Page<ResultEntity> findByUserIdOrderByCreateDesc(Pageable limit, String userId);
-
     Page<ResultEntity> findByPlaceIdOrderByCreateDesc(Pageable limit, int placeId);
 
     // TODO: 日付順に並べ替える処理
     Page<ResultEntity> findAll(Pageable limit);
-
-    Page<ResultEntity> findByParentId(Pageable limit, int parentId);
 }

@@ -7,6 +7,8 @@ import boardmanagement.api.demo.manage.service.base.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static boardmanagement.api.demo.security.config.SecurityConstants.SIGNUP_URL;
 
 /**
@@ -38,5 +40,12 @@ public class UserControllController {
     SuccessBean<UserEntityBean> signup(@RequestBody UserRequestBean userRequestBean) {
         UserEntityBean result = userService.register(userRequestBean.toUserRegisterDto());
         return new SuccessBean<>(result);
+    }
+
+    @GetMapping("/user/find/{keyword}")
+    public SuccessBean<List<UserEntityBean>> find(@PathVariable String keyword) {
+        List<UserEntityBean> userEntityBeanList = userService.findLikeId(keyword);
+
+        return new SuccessBean<>(userEntityBeanList);
     }
 }
