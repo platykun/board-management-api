@@ -1,5 +1,6 @@
 package boardmanagement.api.demo.manage.dto;
 
+import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
 import boardmanagement.api.demo.manage.entity.ResultEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class UserStatusResponseDto {
     /**
      * チェックイン場所
      */
-    private String checkIn;
+    private PlaceEntityBean checkIn;
 
     /**
      * 自分の過去の履歴情報.

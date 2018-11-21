@@ -1,6 +1,7 @@
 package boardmanagement.api.demo.manage.service;
 
 import boardmanagement.api.demo.common.bean.entity.CheckInEntityBean;
+import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
 import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.entity.ResultEntity;
@@ -51,12 +52,12 @@ public class StatusService {
         int placeId = checkInEntityBean.orElse(new CheckInEntityBean()).getPlaceId();
 
         // ステータス情報を取得する.
-        String placeName = checkInEntityBean.map(c -> placeService.findById(c.getPlaceId()).getName()).orElse("");
+        PlaceEntityBean checkInPlace = checkInEntityBean.map(c -> placeService.findById(c.getPlaceId())).orElse(new PlaceEntityBean());
 
         List<ResultEntity> myHistory = resultService.findResultOutlineByUserId(loginUserBean.getId());
         List<ResultEntity> nearHistory = resultService.findResultOutlineByPlaceId(placeId);
         List<ResultEntity> allHistory = resultService.findResults(0);
 
-        return new UserStatusResponseDto(placeName, myHistory, nearHistory, allHistory);
+        return new UserStatusResponseDto(checkInPlace, myHistory, nearHistory, allHistory);
     }
 }
