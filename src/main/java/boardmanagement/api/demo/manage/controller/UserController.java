@@ -104,13 +104,13 @@ public class UserController {
      * ユーザごとの結果を記録する.
      *
      * @param userResultRequestBean 結果登録情報
-     * @param id ID
+     * @param resultId ID
      * @return 登録結果
      */
-    @PutMapping(path="result/{id:^[0-9]+$}/new")
-    SuccessBean<UserResultResponseBean> userResultNew(@RequestBody UserResultRequestBean userResultRequestBean, @PathVariable int id){
+    @PutMapping(path="user_result/{resultId:^[0-9]+$}/new")
+    SuccessBean<UserResultResponseBean> userResultNew(@RequestBody UserResultRequestBean userResultRequestBean, @PathVariable int resultId){
 
-        UserResultResponseBean bean = resultService.registUserResult(id, userResultRequestBean.toResultDto());
+        UserResultResponseBean bean = resultService.registUserResult(resultId, userResultRequestBean.toResultDto());
 
         return new SuccessBean<>(bean);
     }
@@ -122,7 +122,7 @@ public class UserController {
      * @param id ID
      * @return 登録結果
      */
-    @PutMapping(path="result/{id:^[0-9]+$}/{resultId:^[0-9]+$}")
+    @PutMapping(path="user_result/{id:^[0-9]+$}/{resultId:^[0-9]+$}")
     SuccessBean<UserResultResponseBean> userResultUpdate(@RequestBody UserResultRequestBean userResultRequestBean,
                                                          @PathVariable("id") int id, @PathVariable("resultId") int resultId){
 
@@ -137,7 +137,7 @@ public class UserController {
      * @param id ID
      * @return 登録結果
      */
-    @DeleteMapping(path="result/{id:^[0-9]+$}")
+    @DeleteMapping(path="user_result/{id:^[0-9]+$}")
     SuccessBean<Boolean> userResultDelete(@PathVariable int id){
 
         Boolean result = resultService.deleteUserResult(id);

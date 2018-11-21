@@ -20,7 +20,7 @@ public class ResultEntity {
      * 結果ID
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
     /**
