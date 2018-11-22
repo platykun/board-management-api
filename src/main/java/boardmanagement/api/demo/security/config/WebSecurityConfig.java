@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), bCryptPasswordEncoder(), mappingJackson2HttpMessageConverter))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .authorizeRequests()
-                .antMatchers(SIGNUP_URL, LOGIN_URL).permitAll()
+                .antMatchers(SIGNUP_URL, LOGIN_URL, "/all/**").permitAll()
                 .mvcMatchers("/user/**")
                 .hasAnyAuthority("USER")
                 .mvcMatchers("/admin/**")

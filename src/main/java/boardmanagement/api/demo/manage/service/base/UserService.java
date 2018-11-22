@@ -125,4 +125,14 @@ public class UserService {
 
         return users;
     }
+
+    /**
+     * ユーザが作成可能かどうかチェックする.
+     * @param userId ユーザID
+     * @return 作成可能: ture 作成不可: false
+     */
+    public Boolean isAvailableUser(String userId) {
+        Optional<UserEntity> user = userRepository.findById(userId);
+        return !user.isPresent();
+    }
 }
