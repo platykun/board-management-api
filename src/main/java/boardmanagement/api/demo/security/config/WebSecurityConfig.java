@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
         corsConfiguration.addAllowedOrigin("http://localhost:3000");
         corsConfiguration.addAllowedOrigin("https://condescending-montalcini-4af215.netlify.com");
-        corsConfiguration.addAllowedOrigin("https://blissful-hopper-cb7a86.netlify.com");
+        corsConfiguration.addAllowedOrigin("https://board-game-management.netlify.com");
         corsConfiguration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();

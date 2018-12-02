@@ -38,6 +38,9 @@ public class UserController {
      */
     @PostMapping(SIGNUP_URL)
     SuccessBean<UserEntityBean> signup(@RequestBody UserRequestBean userRequestBean) {
+        // TODO: ユーザ存在チェックを行う
+        // TODO: 管理者ユーザはこのエンドポイントからは作成できいないようにする
+        // TODO: 管理者ユーザは/admin/signupのような名前にする
         UserEntityBean result = userService.register(userRequestBean.toUserRegisterDto());
         return new SuccessBean<>(result);
     }
