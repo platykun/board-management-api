@@ -2,6 +2,7 @@ package boardmanagement.api.demo.manage.controller;
 
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
+import boardmanagement.api.demo.manage.bean.request.UserIconUpdateRequestBean;
 import boardmanagement.api.demo.manage.bean.request.UserRequestBean;
 import boardmanagement.api.demo.manage.service.base.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,19 @@ public class UserController {
         List<UserEntityBean> userEntityBeanList = userService.findLikeId(keyword);
 
         return new SuccessBean<>(userEntityBeanList);
+    }
+
+    /**
+     * ユーザのアイコン情報を更新する.
+     * @return 登録済み情報
+     */
+    @PutMapping("/user/icon")
+    public SuccessBean<UserEntityBean> configurationIcon(@PathVariable UserIconUpdateRequestBean userIconUpdateRequestBean) {
+
+        String icon = userIconUpdateRequestBean.getIcon();
+        String iconClor = userIconUpdateRequestBean.getIconColor();
+        UserEntityBean updatedUser = userService.updateUserIcon(icon, iconClor);
+
+        return new SuccessBean<>(updatedUser);
     }
 }

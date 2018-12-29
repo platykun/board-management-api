@@ -33,4 +33,14 @@ public class UserEntity {
      * 権限.
      */
     private int authority;
+
+    /**
+     * アイコンテキスト
+     */
+    private String icon;
+
+    /**
+     * アイコン色(CSS)
+     */
+    private String iconColor;
 }

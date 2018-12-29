@@ -99,11 +99,29 @@ public class UserService {
      */
     public UserEntityBean register(UserRegisterDto user) {
 
-        UserEntity userEntity = new UserEntity(user.getId(), user.getName(), user.getAuthority());
+        UserEntity userEntity = new UserEntity(user.getId(), user.getName(), user.getAuthority(), "", "");
         UserEntity result = userRepository.save(userEntity);
 
         PasswordEntity passwordEntity = new PasswordEntity(result.getId(), user.getPassword());
         passwordRepository.save(passwordEntity);
+
+        return new UserEntityBean(result);
+    }
+
+    /**
+     * ログインユーザのアイコン情報を更新する.
+     * @param icon アイコン
+     * @param iconColor アイコン色
+     * @return 更新後のユーザ情報
+     */
+    public UserEntityBean updateUserIcon(String icon, String iconColor) {
+        UserEntityBean loginUser = findLoginUserFronSession();
+
+        UserEntity user = loginUser.toEntity();
+        user.setIcon(icon);
+        user.setIconColor(iconColor);
+
+        UserEntity result = userRepository.save(user);
 
         return new UserEntityBean(result);
     }

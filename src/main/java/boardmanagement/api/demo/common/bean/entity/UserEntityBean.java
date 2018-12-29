@@ -26,11 +26,21 @@ public class UserEntityBean {
      * 権限.
      */
     private int authority;
+    /**
+     * アイコン名.
+     */
+    private String icon;
+    /**
+     * アイコン色.
+     */
+    private String iconColor;
 
     public UserEntityBean(UserEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.authority = entity.getAuthority();
+        this.icon = entity.getIcon();
+        this.iconColor = entity.getIconColor();
     }
 
     /**
@@ -40,9 +50,11 @@ public class UserEntityBean {
      */
     public UserEntity toEntity() {
         return new UserEntity(
-                this.getId(),
-                this.getName(),
-                this.getAuthority()
+                this.id,
+                this.name,
+                this.authority,
+                this.icon,
+                this.iconColor
         );
     }
 }
