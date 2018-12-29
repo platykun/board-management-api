@@ -22,12 +22,12 @@ CREATE TABLE IF NOT EXISTS PLACE (ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(8
 DROP TABLE CHECK_IN;
 CREATE TABLE IF NOT EXISTS CHECK_IN(ID INT NOT NULL AUTO_INCREMENT, USER_ID VARCHAR(20) NOT NULL, PLACE_ID INT NOT NULL, TIMESTAMP TIMESTAMP NOT NULL, CHECKED_OUT BOOLEAN);
 
-INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('admin', 'あどみん', 0, 'hippo', 'cyan--text text--darken-2');
-INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('admin1', 'あどみん1', 0, 'crow', 'cyan--text text--darken-2');
-INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('admin2', 'あどみん2', 0, 'dog', 'cyan--text text--darken-2');
-INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('user', 'ユーザ', 0, 'dove', 'red--text text--darken-2');
-INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('user1', 'ユーザ1', 0, 'fish', 'red--text text--accent-1');
-INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('user2', 'ユーザ2', 0, 'frog', 'red--text text--accent-2');
+INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('admin', 'あどみん', 0, 'hippo', 'cyan darken-2');
+INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('admin1', 'あどみん1', 0, 'crow', 'cyan darken-2');
+INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('admin2', 'あどみん2', 0, 'dog', 'cyan darken-2');
+INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('user', 'ユーザ', 0, 'dove', 'red darken-2');
+INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('user1', 'ユーザ1', 0, 'fish', 'red accent-1');
+INSERT INTO USER (ID, NAME, AUTHORITY, ICON, ICON_COLOR) VALUES ('user2', 'ユーザ2', 0, 'frog', 'red accent-2');
 INSERT INTO PASSWORD (USER_ID, PASSWORD) VALUES ('admin', 'password');
 INSERT INTO PASSWORD (USER_ID, PASSWORD) VALUES ('admin1', 'password');
 INSERT INTO PASSWORD (USER_ID, PASSWORD) VALUES ('admin2', 'password');

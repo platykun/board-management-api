@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static boardmanagement.api.demo.security.config.SecurityConstants.SIGNUP_URL;
 
@@ -70,12 +71,30 @@ public class UserController {
      * @return 登録済み情報
      */
     @PutMapping("/user/icon")
-    public SuccessBean<UserEntityBean> configurationIcon(@PathVariable UserIconUpdateRequestBean userIconUpdateRequestBean) {
+    public SuccessBean<UserEntityBean> configurationIcon(@RequestBody UserIconUpdateRequestBean userIconUpdateRequestBean) {
 
         String icon = userIconUpdateRequestBean.getIcon();
         String iconClor = userIconUpdateRequestBean.getIconColor();
         UserEntityBean updatedUser = userService.updateUserIcon(icon, iconClor);
 
         return new SuccessBean<>(updatedUser);
+    }
+
+    /**
+     * ユーザの詳細情報を取得する.
+     * @param userId ユーザID
+     * @return ユーザの詳細情報
+     */
+    @GetMapping("/all/user/detail/{userId}")
+    public SuccessBean<UserEntityBean> getUserDetail(@PathVariable String userId) {
+        Optional<UserEntityBean> user = userService.findByUserId(userId);
+
+        // ユーザが検索できなかった場合エラーを返却する
+        // TODO: このときにErrorBeanで返却できるようにする
+        if(!user.isPresent()){
+            throw new IllegalArgumentException();
+        }
+
+        return new SuccessBean<>(user.get());
     }
 }
