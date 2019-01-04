@@ -40,7 +40,7 @@ public class UserCheckInController {
      * @param placeId 場所ID
      * @return チェックイン済情報
      */
-    @PutMapping(path="checkin/{placeId}")
+    @PutMapping(path="place/{placeId}/check-in")
     SuccessBean<CheckInEntityBean> checkin(@PathVariable int placeId){
         UserEntityBean loginUser = userService.findLoginUserFronSession();
 
@@ -56,7 +56,7 @@ public class UserCheckInController {
      *
      * @return チェックイン済情報
      */
-    @PutMapping(path="checkout")
+    @PutMapping(path="check-ins/checkout")
     SuccessBean<Integer> checkout(){
         UserEntityBean loginUser = userService.findLoginUserFronSession();
 
@@ -70,8 +70,10 @@ public class UserCheckInController {
      * @param page ページング
      * @return チェックイン履歴
      */
-    @GetMapping(path="history/checkin/{page:^[a-z0-9]+$}")
-    public SuccessBean<List<CheckInEntityBean>> checkInHistory(@PathVariable int page) {
+    @GetMapping(path="check-ins/me")
+    public SuccessBean<List<CheckInEntityBean>> checkInHistory(
+                @RequestParam(name = "page", required = false) Integer page
+    ) {
         UserEntityBean loginUser = userService.findLoginUserFronSession();
         List<CheckInEntityBean> checkInHistory = checkInService.findCheckInByUserId(loginUser.getId(), page);
 

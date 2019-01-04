@@ -35,7 +35,7 @@ public class BoardGameController {
      * @param requestBean 作成ボードゲーム情報
      * @return 作成後のボードゲーム情報
      */
-    @PutMapping("/boardgame")
+    @PutMapping("/user/boardgames")
     public SuccessBean<BoardGameEntityBean> create(@RequestBody BoardGameRequestBean requestBean) {
         BoardGameEntityBean result = boardGameService.register(requestBean.toEntityBean());
         return new SuccessBean<>(result);
@@ -43,11 +43,12 @@ public class BoardGameController {
 
     /**
      * ボードゲームを更新する.
+     *
      * @param requestBean 更新情報
      * @param boardGameId 更新対象のID
      * @return 更新後のボードゲーム情報
      */
-    @PutMapping("/boardgame/{boardGameId:^[0-9]+$}")
+    @PutMapping("/user/boardgames/{boardGameId:^[0-9]+$}")
     public SuccessBean<BoardGameEntityBean> update(@RequestBody BoardGameRequestBean requestBean, @PathVariable int boardGameId) {
         BoardGameEntityBean result = boardGameService.update(requestBean.toEntityBeanWithId(boardGameId));
         return new SuccessBean<>(result);
@@ -55,10 +56,11 @@ public class BoardGameController {
 
     /**
      * ボードゲームを削除する.
+     *
      * @param boardGameId 削除対象ID
      * @return 削除結果
      */
-    @DeleteMapping("/boardgame/{boardGameId:^[0-9]+$}")
+    @DeleteMapping("/admin/boardgames/{boardGameId:^[0-9]+$}")
     public SuccessBean<Boolean> delete(@PathVariable int boardGameId) {
         Boolean result = boardGameService.delete(boardGameId);
         return new SuccessBean<>(result);
@@ -67,26 +69,25 @@ public class BoardGameController {
 
     /**
      * ボードゲームを検索する.
-     * @param page ページ番号
-     * @return ルーム情報
+     * queryが指定されている場合、キーワードに合致しているかどうかの判定を行う
+     * queryが指定されていない場合全ての値を取得する
+     *
+     * @param page [任意]ページ番号 指定なしの場合:0 負の値の場合:0
+     * @return ボードゲーム情報
      */
-    @GetMapping("/boardgame/find_all/{page:^[a-z0-9]+$}")
-    public SuccessBean<List<BoardGameEntityBean>> findAll(@PathVariable int page) {
-        List<BoardGameEntityBean> boardGameEntityBeanList = boardGameService.findAll(page);
-
-        return new SuccessBean<>(boardGameEntityBeanList);
-    }
-
-    /**
-     * キーワードに合致したボードゲームを検索する.
-     * @param keyword キーワード
-     * @return ボードゲームリスト
-     */
-    @GetMapping("/boardgame/find/{keyword}")
-    public SuccessBean<List<BoardGameEntityBean>> find(@PathVariable String keyword) {
-        List<BoardGameEntityBean> boardGameEntityBeanList = boardGameService.findByName(keyword);
-
-        return new SuccessBean<>(boardGameEntityBeanList);
+    @GetMapping("/boardgames")
+    public SuccessBean<List<BoardGameEntityBean>> find(
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "q", required = false) String query
+    ) {
+        if (query != null) {
+            List<BoardGameEntityBean> boardGameEntityBeanList = boardGameService.findByName(query);
+            return new SuccessBean<>(boardGameEntityBeanList);
+        } else {
+            int findPage = page < 0 ? 0 : page;
+            List<BoardGameEntityBean> boardGameEntityBeanList = boardGameService.findAll(findPage);
+            return new SuccessBean<>(boardGameEntityBeanList);
+        }
     }
 }
 

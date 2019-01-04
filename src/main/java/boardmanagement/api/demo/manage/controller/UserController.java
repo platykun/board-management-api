@@ -52,16 +52,19 @@ public class UserController {
      * @param userId ユーザID
      * @return 利用有無
      */
-    @GetMapping("/all/user_available/{userId}")
+    @GetMapping("/users/{userId}/available")
     public SuccessBean<Boolean> existUser(@PathVariable String userId) {
         Boolean result = userService.isAvailableUser(userId);
 
         return new SuccessBean<>(result);
     }
 
-    @GetMapping("/user/find/{keyword}")
-    public SuccessBean<List<UserEntityBean>> find(@PathVariable String keyword) {
-        List<UserEntityBean> userEntityBeanList = userService.findLikeId(keyword);
+    @GetMapping("/users")
+    public SuccessBean<List<UserEntityBean>> find(
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "q", required = false) String query
+    ) {
+        List<UserEntityBean> userEntityBeanList = userService.findLikeId(query);
 
         return new SuccessBean<>(userEntityBeanList);
     }
@@ -70,7 +73,7 @@ public class UserController {
      * ユーザのアイコン情報を更新する.
      * @return 登録済み情報
      */
-    @PutMapping("/user/icon")
+    @PutMapping("/users/me/icon")
     public SuccessBean<UserEntityBean> configurationIcon(@RequestBody UserIconUpdateRequestBean userIconUpdateRequestBean) {
 
         String icon = userIconUpdateRequestBean.getIcon();
@@ -85,7 +88,7 @@ public class UserController {
      * @param userId ユーザID
      * @return ユーザの詳細情報
      */
-    @GetMapping("/all/user/detail/{userId}")
+    @GetMapping("/users/{userId}")
     public SuccessBean<UserEntityBean> getUserDetail(@PathVariable String userId) {
         Optional<UserEntityBean> user = userService.findByUserId(userId);
 

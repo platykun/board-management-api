@@ -157,38 +157,42 @@ public class ResultService {
      * @param userResultRegistDto ユーザごとの結果情報
      * @return 登録結果
      */
-    public UserResultResponseBean updateUserResult(int id, int resultId, UserResultRegistDto userResultRegistDto) {
-        UserResultEntity data = new UserResultEntity(
-                id,
-                resultId,
-                userResultRegistDto.getUserId(),
-                userResultRegistDto.getScore(),
-                userResultRegistDto.getComment()
-        );
+    public UserResultResponseBean updateUserResult(int resultId, int userId, UserResultRegistDto userResultRegistDto) {
+        List<UserResultEntity> targets = userResultRepository.findByResultIdAndUserId(resultId, userId);
+        if(targets.size() != 1) {
+            return null;
+        }
 
-        UserResultEntity result = userResultRepository.save(data);
+        UserResultEntity updatedUserResult = targets.stream().map(
+                t-> {
+                    UserResultEntity data = new UserResultEntity(
+                            t.getId(),
+                            resultId,
+                            userResultRegistDto.getUserId(),
+                            userResultRegistDto.getScore(),
+                            userResultRegistDto.getComment()
+                    );
+                    return userResultRepository.save(data);
+                }
+        ).findFirst().get();
 
-        return new UserResultResponseBean(result);
+        return new UserResultResponseBean(updatedUserResult);
     }
 
     /**
      * ユーザごとの結果を削除する.
      *
-     * @param id ID
      * @return 削除結果
      */
-    public Boolean deleteUserResult(int id) {
+    public Boolean deleteUserResult(int resultId, int userId) {
+        List<UserResultEntity> targets = userResultRepository.findByResultIdAndUserId(resultId, userId);
+        if(targets.size() != 1){
+            return false;
+        }
 
-        UserResultEntity data = new UserResultEntity(
-                id,
-                0,
-                null,
-                null,
-                null
+        targets.forEach(
+          target -> userResultRepository.delete(target)
         );
-
-        userResultRepository.delete(data);
-
         return true;
     }
 

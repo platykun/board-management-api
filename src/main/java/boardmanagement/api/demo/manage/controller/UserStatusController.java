@@ -28,10 +28,9 @@ public class UserStatusController {
      * ログインユーザのステータス情報を取得する.
      * @return ログインユーザのステータス情報
      */
-    @GetMapping(path="/user/status")
+    @GetMapping(path="/users/me/status")
     SuccessBean<StatusResponseBean> status(){
         UserStatusResponseDto dto = statusService.getStatus();
         return new SuccessBean<>(new StatusResponseBean(dto));
     }
 }
-

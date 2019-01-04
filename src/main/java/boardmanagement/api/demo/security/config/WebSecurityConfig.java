@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,10 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), bCryptPasswordEncoder(), mappingJackson2HttpMessageConverter))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .authorizeRequests()
-                .antMatchers(SIGNUP_URL, LOGIN_URL, "/all/**").permitAll()
-                .mvcMatchers("/user/**")
+                .antMatchers(HttpMethod.GET).permitAll() // GETパラメータは全てのユーザに対して許可
+                .antMatchers(SIGNUP_URL, LOGIN_URL, "/all/**").permitAll() // ALL先頭のリクエストは全て許可
+                .mvcMatchers("/user/**")//USER先頭のリクエストはログインユーザのみ許可
                 .hasAnyAuthority("USER")
-                .mvcMatchers("/admin/**")
+                .mvcMatchers("/admin/**") //ADMIN先頭のリクエストは管理者ユーザのみ許可
                 .hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and().logout()

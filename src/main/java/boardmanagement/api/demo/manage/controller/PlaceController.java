@@ -35,22 +35,9 @@ public class PlaceController {
      * @param placeRequestBean 場所情報.
      * @return 作成済場所情報.
      */
-    @PutMapping("/place")
+    @PutMapping("/user/places")
     public SuccessBean<PlaceEntityBean> createPlace(@RequestBody PlaceRequestBean placeRequestBean) {
         PlaceEntityBean result = placeService.register(placeRequestBean.toEntityBean());
-
-        return new SuccessBean<>(result);
-    }
-
-    /**
-     * 場所を取得する.
-     *
-     * @param placeId 場所ID
-     * @return 更新結果情報
-     */
-    @GetMapping("/place/find/id/{placeId:^[0-9]+$}")
-    public SuccessBean<PlaceEntityBean> getPlace(@PathVariable int placeId) {
-        PlaceEntityBean result = placeService.findById(placeId);
 
         return new SuccessBean<>(result);
     }
@@ -62,7 +49,7 @@ public class PlaceController {
      * @param placeId 場所ID
      * @return 更新結果情報
      */
-    @PutMapping("/place/{placeId:^[0-9]+$}")
+    @PutMapping("/user/places/{placeId:^[0-9]+$}")
     public SuccessBean<PlaceEntityBean> updatePlace(@RequestBody PlaceRequestBean placeUpdateRequestBean, @PathVariable int placeId) {
         PlaceEntityBean result = placeService.update(placeUpdateRequestBean.toEntityBeanWithId(placeId));
 
@@ -75,7 +62,7 @@ public class PlaceController {
      * @param placeId 場所ID
      * @return 削除成功可否
      */
-    @DeleteMapping("/place/{placeId:^[0-9]+$}")
+    @DeleteMapping("/user/places/{placeId:^[0-9]+$}")
     public SuccessBean<Boolean> deletePlace(@PathVariable int placeId) {
         Boolean result = placeService.delete(placeId);
 
@@ -83,27 +70,31 @@ public class PlaceController {
     }
 
     /**
-     * 場所を検索する.
-     * @param page ページ番号
-     * @return 場所情報リスト
+     * 場所を取得する.
+     *
+     * @param placeId 場所ID
+     * @return 更新結果情報
      */
-    @GetMapping("/place/find_all/{page:^[a-z0-9]+$}")
-    public SuccessBean<List<PlaceEntityBean>> findAll(@PathVariable int page) {
-        List<PlaceEntityBean> placeEntityBeanList = placeService.findAll(page);
+    @GetMapping("/places/{placeId:^[0-9]+$}")
+    public SuccessBean<PlaceEntityBean> getPlace(@PathVariable int placeId) {
+        PlaceEntityBean result = placeService.findById(placeId);
 
-        return new SuccessBean<>(placeEntityBeanList);
+        return new SuccessBean<>(result);
     }
 
-    /**
-     * キーワードに合致した場所を検索する.
-     * @param keyword キーワード
-     * @return 場所情報リスト
-     */
-    @GetMapping("/place/find/{keyword}")
-    public SuccessBean<List<PlaceEntityBean>> find(@PathVariable String keyword) {
-        List<PlaceEntityBean> placeEntityBeanList = placeService.findByName(keyword);
-
-        return new SuccessBean<>(placeEntityBeanList);
+    @GetMapping("/places")
+    public SuccessBean<List<PlaceEntityBean>> find(
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "q", required = false) String query
+    ) {
+        if (query != null) {
+            List<PlaceEntityBean> placeEntityBeanList = placeService.findByName(query);
+            return new SuccessBean<>(placeEntityBeanList);
+        } else {
+            int findPage = page < 0 ? 0 : page;
+            List<PlaceEntityBean> placeEntityBeanList = placeService.findAll(findPage);
+            return new SuccessBean<>(placeEntityBeanList);
+        }
     }
 
 }
