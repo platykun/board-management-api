@@ -16,5 +16,5 @@ public interface UserResultRepository extends JpaRepository<UserResultEntity, In
 
     List<UserResultEntity> findByUserId(Pageable limit, String userId);
 
-    List<UserResultEntity> findByResultIdAndUserId(int resultId, int userId);
+    List<UserResultEntity> findByResultIdAndUserId(int resultId, String userId);
 }

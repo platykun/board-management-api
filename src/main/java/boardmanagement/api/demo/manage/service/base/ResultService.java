@@ -157,7 +157,7 @@ public class ResultService {
      * @param userResultRegistDto ユーザごとの結果情報
      * @return 登録結果
      */
-    public UserResultResponseBean updateUserResult(int resultId, int userId, UserResultRegistDto userResultRegistDto) {
+    public UserResultResponseBean updateUserResult(int resultId, String userId, UserResultRegistDto userResultRegistDto) {
         List<UserResultEntity> targets = userResultRepository.findByResultIdAndUserId(resultId, userId);
         if(targets.size() != 1) {
             return null;
@@ -184,7 +184,7 @@ public class ResultService {
      *
      * @return 削除結果
      */
-    public Boolean deleteUserResult(int resultId, int userId) {
+    public Boolean deleteUserResult(int resultId, String userId) {
         List<UserResultEntity> targets = userResultRepository.findByResultIdAndUserId(resultId, userId);
         if(targets.size() != 1){
             return false;

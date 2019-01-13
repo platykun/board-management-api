@@ -74,9 +74,9 @@ public class ResultController {
      * @param userId ユーザID
      * @return 登録結果
      */
-    @PutMapping(path="/user/result/{resultId:^[0-9]+$}/users/{userId:^[0-9]+$}/")
+    @PutMapping(path="/user/result/{resultId:^[0-9]+$}/users/{userId:^[a-zA-Z0-9]+$}")
     SuccessBean<UserResultResponseBean> userResultUpdate(@RequestBody UserResultRequestBean userResultRequestBean,
-                                                         @PathVariable("userId") int userId, @PathVariable("resultId") int resultId){
+                                                         @PathVariable("userId") String userId, @PathVariable("resultId") int resultId){
         UserResultResponseBean bean = resultService.updateUserResult(resultId, userId, userResultRequestBean.toResultDto());
 
         return new SuccessBean<>(bean);
@@ -89,8 +89,8 @@ public class ResultController {
      * @param userId ユーザID
      * @return 削除結果
      */
-    @DeleteMapping(path="/user/result/{resultId:^[0-9]+$}/users/{userId:^[0-9]+$}")
-    SuccessBean<Boolean> userResultDelete(@PathVariable int resultId, @PathVariable int userId){
+    @DeleteMapping(path="/user/result/{resultId:^[0-9]+$}/users/{userId:^[a-zA-Z0-9]+$}")
+    SuccessBean<Boolean> userResultDelete(@PathVariable int resultId, @PathVariable String userId){
         Boolean result = resultService.deleteUserResult(resultId, userId);
 
         return new SuccessBean<>(result);
