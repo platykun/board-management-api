@@ -46,5 +46,6 @@ public class ResultEntity {
     /**
      * 作成日.
      */
+    @Column(name = "CREATE_DATE")
     private Date create;
 }

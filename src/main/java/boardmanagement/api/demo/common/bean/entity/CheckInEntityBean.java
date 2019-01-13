@@ -43,7 +43,7 @@ public class CheckInEntityBean {
         this.id = entity.getId();
         this.userId = entity.getUserId();
         this.placeId = entity.getPlaceId();
-        this.timestamp = entity.getTimestamp();
+        this.timestamp = entity.getTimestampValue();
         this.checkedOut = entity.isCheckedOut();
     }
 

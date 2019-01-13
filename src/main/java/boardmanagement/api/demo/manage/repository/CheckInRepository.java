@@ -22,7 +22,7 @@ public interface CheckInRepository extends JpaRepository<CheckInEntity, Integer>
 
     List<CheckInEntity> findByUserIdOrderByIdDesc(Pageable var1, String userId);
 
-    Page<CheckInEntity> findByUserIdOrderByTimestampDesc(Pageable var1, String userId);
+    Page<CheckInEntity> findByUserIdOrderByTimestampValueDesc(Pageable var1, String userId);
 
     /**
      * ユーザIDに紐づくすべての未チェックアウトデータをチェックアウト済にする.

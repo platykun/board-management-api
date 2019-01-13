@@ -36,7 +36,7 @@ public class CheckInEntity {
     /**
      * タイムスタンプ.
      */
-    private Date timestamp;
+    private Date timestampValue;
 
     /**
      * チェックアウトフラグ.

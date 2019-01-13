@@ -13,11 +13,11 @@ import javax.persistence.Table;
  * ユーザテーブル.
  */
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+public class AppUserEntity {
     /**
      * ユーザID.
      */

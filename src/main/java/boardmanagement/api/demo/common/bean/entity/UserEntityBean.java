@@ -1,6 +1,6 @@
 package boardmanagement.api.demo.common.bean.entity;
 
-import boardmanagement.api.demo.manage.entity.UserEntity;
+import boardmanagement.api.demo.manage.entity.AppUserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +35,7 @@ public class UserEntityBean {
      */
     private String iconColor;
 
-    public UserEntityBean(UserEntity entity) {
+    public UserEntityBean(AppUserEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.authority = entity.getAuthority();
@@ -48,8 +48,8 @@ public class UserEntityBean {
      *
      * @return Entityクラス
      */
-    public UserEntity toEntity() {
-        return new UserEntity(
+    public AppUserEntity toEntity() {
+        return new AppUserEntity(
                 this.id,
                 this.name,
                 this.authority,

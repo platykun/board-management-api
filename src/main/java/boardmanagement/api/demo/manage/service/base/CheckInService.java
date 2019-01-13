@@ -46,7 +46,7 @@ public class CheckInService {
      */
     public Optional<CheckInEntityBean> findLatestCheckin(String userId) {
         Pageable limit = PageRequest.of(0, 1);
-        Page<CheckInEntity> checkInEntity = checkInRepository.findByUserIdOrderByTimestampDesc(limit, userId);
+        Page<CheckInEntity> checkInEntity = checkInRepository.findByUserIdOrderByTimestampValueDesc(limit, userId);
 
         if(!checkInEntity.hasContent()){
             return Optional.empty();
@@ -65,7 +65,7 @@ public class CheckInService {
      */
     public List<CheckInEntityBean> findCheckInByUserId(String id, int page) {
         Pageable limit = PageRequest.of(page, FIND_LIMIT);
-        Page<CheckInEntity> checkInEntities = checkInRepository.findByUserIdOrderByTimestampDesc(limit, id);
+        Page<CheckInEntity> checkInEntities = checkInRepository.findByUserIdOrderByTimestampValueDesc(limit, id);
 
         return checkInEntities.stream().map(CheckInEntityBean::new).collect(Collectors.toList());
     }

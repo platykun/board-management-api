@@ -3,9 +3,9 @@ package boardmanagement.api.demo.manage.service.base;
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
 import boardmanagement.api.demo.manage.dto.UserRegisterDto;
 import boardmanagement.api.demo.manage.entity.PasswordEntity;
-import boardmanagement.api.demo.manage.entity.UserEntity;
+import boardmanagement.api.demo.manage.entity.AppUserEntity;
 import boardmanagement.api.demo.manage.repository.PasswordRepository;
-import boardmanagement.api.demo.manage.repository.UserRepository;
+import boardmanagement.api.demo.manage.repository.AppUserRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,14 +27,14 @@ public class UserService {
     private static final int FIND_LIMIT = 100;
 
     @NonNull
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
     @NonNull
     private final PasswordRepository passwordRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordRepository passwordRepository) {
-        this.userRepository = userRepository;
+    public UserService(AppUserRepository appUserRepository, PasswordRepository passwordRepository) {
+        this.appUserRepository = appUserRepository;
         this.passwordRepository = passwordRepository;
     }
 
@@ -49,7 +49,7 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = (String) authentication.getPrincipal();
 
-        Optional<UserEntityBean> loginUser = userRepository.findById(userName).map(UserEntityBean::new);
+        Optional<UserEntityBean> loginUser = appUserRepository.findById(userName).map(UserEntityBean::new);
         if(!loginUser.isPresent()){
             throw new IllegalArgumentException("cant find login user");
         }
@@ -63,7 +63,7 @@ public class UserService {
      * @return ユーザ情報
      */
     public Optional<UserEntityBean> findByUserName(String userName) {
-        return userRepository.findByName(userName).map(UserEntityBean::new);
+        return appUserRepository.findByName(userName).map(UserEntityBean::new);
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserService {
      * @return ユーザ数
      */
     public int countByUserName(String name) {
-        return userRepository.countByName(name);
+        return appUserRepository.countByName(name);
     }
 
     /**
@@ -80,7 +80,7 @@ public class UserService {
      * @return ユーザ情報
      */
     public Optional<UserEntityBean> findByUserId(String userId) {
-        return userRepository.findById(userId).map(UserEntityBean::new);
+        return appUserRepository.findById(userId).map(UserEntityBean::new);
     }
 
     /**
@@ -89,7 +89,7 @@ public class UserService {
      * @return ユーザ数
      */
     public int countById(String id) {
-        return userRepository.countById(id);
+        return appUserRepository.countById(id);
     }
 
     /**
@@ -99,8 +99,8 @@ public class UserService {
      */
     public UserEntityBean register(UserRegisterDto user) {
 
-        UserEntity userEntity = new UserEntity(user.getId(), user.getName(), user.getAuthority(), "", "");
-        UserEntity result = userRepository.save(userEntity);
+        AppUserEntity userEntity = new AppUserEntity(user.getId(), user.getName(), user.getAuthority(), "", "");
+        AppUserEntity result = appUserRepository.save(userEntity);
 
         PasswordEntity passwordEntity = new PasswordEntity(result.getId(), user.getPassword());
         passwordRepository.save(passwordEntity);
@@ -117,11 +117,11 @@ public class UserService {
     public UserEntityBean updateUserIcon(String icon, String iconColor) {
         UserEntityBean loginUser = findLoginUserFronSession();
 
-        UserEntity user = loginUser.toEntity();
+        AppUserEntity user = loginUser.toEntity();
         user.setIcon(icon);
         user.setIconColor(iconColor);
 
-        UserEntity result = userRepository.save(user);
+        AppUserEntity result = appUserRepository.save(user);
 
         return new UserEntityBean(result);
     }
@@ -135,8 +135,8 @@ public class UserService {
     public List<UserEntityBean> findLikeId(String keyword) {
         Pageable limit = PageRequest.of(0, FIND_LIMIT);
 
-        Page<UserEntity> userEntityPage;
-        userEntityPage = userRepository.findLikeId(keyword, limit);
+        Page<AppUserEntity> userEntityPage;
+        userEntityPage = appUserRepository.findLikeId(keyword, limit);
 
         List<UserEntityBean> users = new ArrayList<>();
         userEntityPage.forEach(r -> users.add(new UserEntityBean(r)));
@@ -150,7 +150,7 @@ public class UserService {
      * @return 作成可能: ture 作成不可: false
      */
     public Boolean isAvailableUser(String userId) {
-        Optional<UserEntity> user = userRepository.findById(userId);
+        Optional<AppUserEntity> user = appUserRepository.findById(userId);
         return !user.isPresent();
     }
 }
