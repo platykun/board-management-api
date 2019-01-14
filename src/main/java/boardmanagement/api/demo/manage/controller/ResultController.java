@@ -7,7 +7,7 @@ import boardmanagement.api.demo.manage.bean.request.UserResultRequestBean;
 import boardmanagement.api.demo.manage.bean.response.ResultResponseBean;
 import boardmanagement.api.demo.manage.bean.response.UserResultResponseBean;
 import boardmanagement.api.demo.manage.service.base.ResultService;
-import boardmanagement.api.demo.manage.service.base.UserService;
+import boardmanagement.api.demo.manage.service.base.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ public class ResultController {
      * ユーザサービスクラス.
      */
     private final
-    UserService userService;
+    AppUserService userService;
 
     /**
      * 結果情報サービスクラス.
@@ -33,7 +33,7 @@ public class ResultController {
     ResultService resultService;
 
     @Autowired
-    public ResultController(UserService userService, ResultService resultService) {
+    public ResultController(AppUserService userService, ResultService resultService) {
         this.userService = userService;
         this.resultService = resultService;
     }

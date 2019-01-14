@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.Optional;
  * ユーザサービスクラス.
  */
 @Service
-public class UserService {
+public class AppUserService {
     private static final int FIND_LIMIT = 100;
 
     @NonNull
@@ -32,10 +33,14 @@ public class UserService {
     @NonNull
     private final PasswordRepository passwordRepository;
 
+    @NonNull
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(AppUserRepository appUserRepository, PasswordRepository passwordRepository) {
+    public AppUserService(AppUserRepository appUserRepository, PasswordRepository passwordRepository, PasswordEncoder passwordEncoder) {
         this.appUserRepository = appUserRepository;
         this.passwordRepository = passwordRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -102,7 +107,8 @@ public class UserService {
         AppUserEntity userEntity = new AppUserEntity(user.getId(), user.getName(), user.getAuthority(), "", "");
         AppUserEntity result = appUserRepository.save(userEntity);
 
-        PasswordEntity passwordEntity = new PasswordEntity(result.getId(), user.getPassword());
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        PasswordEntity passwordEntity = new PasswordEntity(result.getId(), encodedPassword);
         passwordRepository.save(passwordEntity);
 
         return new UserEntityBean(result);

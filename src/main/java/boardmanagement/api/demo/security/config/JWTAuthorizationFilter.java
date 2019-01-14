@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static boardmanagement.api.demo.security.config.SecurityConstants.HEADER_STRING;
-import static boardmanagement.api.demo.security.config.SecurityConstants.SECRET;
 import static boardmanagement.api.demo.security.config.SecurityConstants.TOKEN_PREFIX;
 
 /**
@@ -23,11 +22,18 @@ import static boardmanagement.api.demo.security.config.SecurityConstants.TOKEN_P
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
+    /**
+     * 暗号鍵.
+     */
+    private String secretKey;
+
     private AuthenticationManager authenticationManager;
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthorizationFilter(
+            AuthenticationManager authenticationManager, String secretKey) {
         super(authenticationManager);
         this.authenticationManager = authenticationManager;
+        this.secretKey = secretKey;
     }
 
     @Override
@@ -56,7 +62,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         if (token != null) {
             // parse the token.
             String[] subjects = Jwts.parser()
-                    .setSigningKey(SECRET.getBytes())
+                    .setSigningKey(secretKey.getBytes())
                     .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                     .getBody()
                     .getSubject().split(",");

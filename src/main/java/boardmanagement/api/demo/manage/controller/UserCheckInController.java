@@ -20,7 +20,7 @@ public class UserCheckInController {
      * ユーザサービスクラス.
      */
     private final
-    UserService userService;
+    AppUserService userService;
 
     /**
      * チェックインサービスクラス.
@@ -29,7 +29,7 @@ public class UserCheckInController {
     CheckInService checkInService;
 
     @Autowired
-    public UserCheckInController(UserService userService, CheckInService checkInService) {
+    public UserCheckInController(AppUserService userService, CheckInService checkInService) {
         this.userService = userService;
         this.checkInService = checkInService;
     }

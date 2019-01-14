@@ -23,7 +23,7 @@ public class StatusService {
     private CheckInService checkInService;
 
     @Autowired
-    private UserService userService;
+    private AppUserService userService;
 
     @Autowired
     private PlaceService placeService;

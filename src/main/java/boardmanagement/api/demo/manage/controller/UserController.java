@@ -4,7 +4,7 @@ import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
 import boardmanagement.api.demo.manage.bean.request.UserIconUpdateRequestBean;
 import boardmanagement.api.demo.manage.bean.request.UserRequestBean;
-import boardmanagement.api.demo.manage.service.base.UserService;
+import boardmanagement.api.demo.manage.service.base.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,10 +26,10 @@ public class UserController {
      * ユーザサービスクラス.
      */
     private final
-    UserService userService;
+    AppUserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(AppUserService userService) {
         this.userService = userService;
     }
 

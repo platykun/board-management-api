@@ -1,6 +1,6 @@
 package boardmanagement.api.demo.security.service;
 
-import boardmanagement.api.demo.manage.service.base.UserService;
+import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,25 +19,24 @@ import static boardmanagement.api.demo.common.constants.AuthType.ADMIN;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    UserService userService;
-
-    // TODO: パスワードを復号化して取得する仕組みが備わっていないため、修正が必要。
-    private static String ENCRYPTED_PASSWORD = "$2a$10$5DF/j5hHnbeHyh85/0Bdzu1HV1KyJKZRt2GhpsfzQ8387A/9duSuq"; // "password"を暗号化した値
+    LoginService loginService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if(userService.countById(username)!= 1){
+        if(loginService.countById(username)!= 1){
             throw new UsernameNotFoundException(username);
         }
 
-        int authority = userService.findByUserId(username).get().getAuthority();
+        UserEntityBean loginUser = loginService.findByUserId(username).get();
+        String loginUserPassword= loginService.findPasswordByUserId(username).getPassword();
+        int authority = loginUser.getAuthority();
 
         if(ADMIN.ordinal() == authority){
             Collection<GrantedAuthority> authorityList = new ArrayList<>();
             authorityList.add(new SimpleGrantedAuthority("ADMIN"));
             authorityList.add(new SimpleGrantedAuthority("USER"));
-            return new User(username, ENCRYPTED_PASSWORD, authorityList);
+            return new User(username, loginUserPassword, authorityList);
 //            return User.withUsername(username)
 //                    .password(ENCRYPTED_PASSWORD)
 //                    .authorities(new SimpleGrantedAuthority("ROLE_USER")) // ユーザの権限
@@ -46,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             Collection<GrantedAuthority> authorityList = new ArrayList<>();
             authorityList.add(new SimpleGrantedAuthority("USER"));
-            return new User(username, ENCRYPTED_PASSWORD, authorityList);
+            return new User(username, loginUserPassword, authorityList);
 //            return User.withUsername(username)
 //                    .password(ENCRYPTED_PASSWORD)
 //                    .authorities(new SimpleGrantedAuthority("ROLE_USER")) // ユーザの権限

@@ -35,6 +35,11 @@ import static boardmanagement.api.demo.security.config.SecurityConstants.*;
  */
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    /**
+     * 暗号鍵
+     */
+    private static String secretKey;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
     private AuthenticationManager authenticationManager;
@@ -42,10 +47,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private MappingJackson2HttpMessageConverter httpMessageConverter;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, BCryptPasswordEncoder bCryptPasswordEncoder, MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter) {
+    public JWTAuthenticationFilter(
+            AuthenticationManager authenticationManager,
+            BCryptPasswordEncoder bCryptPasswordEncoder,
+            MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter,
+            String secretKey
+    ) {
         this.authenticationManager = authenticationManager;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.httpMessageConverter = mappingJackson2HttpMessageConverter;
+        this.secretKey = secretKey;
 
         // ログイン用のpathを変更する
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(LOGIN_URL, "POST"));
@@ -95,7 +106,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = Jwts.builder()
                 .setSubject(((User)auth.getPrincipal()).getUsername() + authorities.toString())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SECRET.getBytes())
+                .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
                 .compact();
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
 

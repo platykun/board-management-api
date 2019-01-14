@@ -28,13 +28,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
     private MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), bCryptPasswordEncoder(), mappingJackson2HttpMessageConverter))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), bCryptPasswordEncoder(), mappingJackson2HttpMessageConverter, securityProperties.getSecurityEncryptKey()))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), securityProperties.getSecurityEncryptKey()))
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET).permitAll() // GETパラメータは全てのユーザに対して許可
                 .antMatchers(SIGNUP_URL, LOGIN_URL, "/all/**").permitAll() // ALL先頭のリクエストは全て許可
