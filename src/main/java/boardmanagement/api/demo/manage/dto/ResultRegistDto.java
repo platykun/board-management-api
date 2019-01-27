@@ -26,12 +26,17 @@ public class ResultRegistDto {
     /**
      * 場所ID.
      */
-    private int placeId;
+    private Integer placeId;
 
     /**
      * 場所名.
      */
     private String placeName;
+
+    /**
+     * イベントID.
+     */
+    private Integer eventId;
 
     /**
      * ユーザ結果リスト.

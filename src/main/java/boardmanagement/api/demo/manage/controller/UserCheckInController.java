@@ -44,11 +44,24 @@ public class UserCheckInController {
     SuccessBean<CheckInEntityBean> checkin(@PathVariable int placeId){
         UserEntityBean loginUser = userService.findLoginUserFronSession();
 
-        //TODO: チェックイン中のものはチェックアウト
+        CheckInEntityBean registeredBean = checkInService.checkIn(loginUser.getId(), placeId);
 
-        CheckInEntityBean registerdBean = checkInService.checkIn(loginUser.getId(), placeId);
+        return new SuccessBean<>(registeredBean);
+    }
 
-        return new SuccessBean<>(registerdBean);
+    /**
+     * チェックイン(宅ボドゲの場合)する.チェックイン中のものがあればチェックアウトする.
+     *
+     * @param userId チェックイン先ユーザID
+     * @return チェックイン済情報
+     */
+    @PutMapping(path="place/home/{userId}/check-in")
+    SuccessBean<CheckInEntityBean> checkin(@PathVariable String userId){
+        UserEntityBean loginUser = userService.findLoginUserFronSession();
+
+        CheckInEntityBean registeredBean = checkInService.checkInAtUserHome(loginUser.getId(), userId);
+
+        return new SuccessBean<>(registeredBean);
     }
 
     /**

@@ -25,12 +25,17 @@ public class ResultRequestBean {
     /**
      * 場所ID.
      */
-    private int placeId;
+    private Integer placeId;
 
     /**
      * 場所名.
      */
     private String placeName;
+
+    /**
+     * イベントID.
+     */
+    private Integer eventId;
 
     /**
      * ユーザごとの結果情報.
@@ -49,6 +54,7 @@ public class ResultRequestBean {
                 this.boardGameTitle,
                 this.placeId,
                 this.placeName,
+                this.eventId,
                 userDtoList
         );
     }

@@ -30,6 +30,11 @@ public class CheckInEntityBean {
     private int placeId;
 
     /**
+     * チェックイン先のユーザID.
+     */
+    private String placeUserId;
+
+    /**
      * タイムスタンプ.
      */
     private Date timestamp;
@@ -43,6 +48,7 @@ public class CheckInEntityBean {
         this.id = entity.getId();
         this.userId = entity.getUserId();
         this.placeId = entity.getPlaceId();
+        this.placeUserId = entity.getPlaceUserId();
         this.timestamp = entity.getTimestampValue();
         this.checkedOut = entity.isCheckedOut();
     }
@@ -53,6 +59,13 @@ public class CheckInEntityBean {
      * @return Entityクラス
      */
     public CheckInEntity toEntity() {
-        return new CheckInEntity(this.getId(), this.getUserId(), this.getPlaceId(), this.getTimestamp(), this.isCheckedOut());
+        return new CheckInEntity(
+                this.id,
+                this.userId,
+                this.placeId,
+                this.placeUserId,
+                this.timestamp,
+                this.checkedOut
+        );
     }
 }

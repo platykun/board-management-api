@@ -1,5 +1,6 @@
 package boardmanagement.api.demo.manage.service.base;
 
+import boardmanagement.api.demo.common.bean.entity.ResultEntityBean;
 import boardmanagement.api.demo.manage.bean.response.ResultResponseBean;
 import boardmanagement.api.demo.manage.bean.response.UserResultResponseBean;
 import boardmanagement.api.demo.manage.dto.ResultRegistDto;
@@ -9,6 +10,7 @@ import boardmanagement.api.demo.manage.entity.UserResultEntity;
 import boardmanagement.api.demo.manage.repository.ResultRepository;
 import boardmanagement.api.demo.manage.repository.UserResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ public class ResultService {
                 resultRegistDto.getBoardGameTitle(),
                 resultRegistDto.getPlaceId(),
                 resultRegistDto.getPlaceName(),
+                resultRegistDto.getEventId(),
                 new Date()
         );
 
@@ -220,5 +223,18 @@ public class ResultService {
         return resultRepository.findByPlaceIdOrderByCreateDesc(limit, placeId)
                 .stream()
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * イベントIDに紐づく記録一覧を取得する.
+     * @param page ページ番号
+     * @param eventId イベントID
+     * @return 記録一覧
+     */
+    public List<ResultEntityBean> findResultsByEventId(int page, int eventId) {
+        Pageable limit = PageRequest.of(page, FIND_LIMIT);
+        Page<ResultEntity> resultEntityList = resultRepository.findAllByEventId(limit, eventId);
+
+        return resultEntityList.stream().map(ResultEntityBean::new).collect(Collectors.toList());
     }
 }

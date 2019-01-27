@@ -34,6 +34,11 @@ public class CheckInEntity {
     private int placeId;
 
     /**
+     * チェックイン先のユーザID.場所IDとどちらかの値が格納される
+     */
+    private String placeUserId;
+
+    /**
      * タイムスタンプ.
      */
     private Date timestampValue;

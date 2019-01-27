@@ -8,35 +8,25 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 結果テーブル.
+ * イベントテーブル.
  */
 @Entity
-@Table(name = "RESULT")
+@Table(name = "EVENT")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResultEntity {
+public class EventEntity {
     /**
-     * 結果ID
+     * イベントID.
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
     /**
-     * ボードゲームID.
-     */
-    private int boardGameId;
-
-    /**
-     * ボードゲームタイトル.
-     */
-    private String boardGameTitle;
-
-    /**
      * 場所ID.
      */
-    private Integer placeId;
+    private int placeId;
 
     /**
      * 場所名.
@@ -44,13 +34,17 @@ public class ResultEntity {
     private String placeName;
 
     /**
-     * イベントID.
+     * 開始日時.
      */
-    private Integer eventId;
+    private Date date_time_from;
 
     /**
-     * 作成日.
+     * 終了日時.
      */
-    @Column(name = "CREATE_DATE")
-    private Date create;
+    private Date date_time_to;
+
+    /**
+     * コメント.
+     */
+    private String comment;
 }

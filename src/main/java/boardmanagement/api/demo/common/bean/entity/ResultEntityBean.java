@@ -40,6 +40,11 @@ public class ResultEntityBean {
     private String placeName;
 
     /**
+     * イベントID.
+     */
+    private int eventId;
+
+    /**
      * 作成日.
      */
     private Date create;
@@ -50,6 +55,7 @@ public class ResultEntityBean {
         this.boardGameTitle = entity.getBoardGameTitle();
         this.placeId = entity.getPlaceId();
         this.placeName = entity.getPlaceName();
+        this.eventId = entity.getEventId();
         this.create = entity.getCreate();
     }
 
@@ -65,6 +71,7 @@ public class ResultEntityBean {
                 this.boardGameTitle,
                 this.placeId,
                 this.placeName,
+                this.eventId,
                 this.create
         );
     }

@@ -30,12 +30,27 @@ public class CheckInService {
      * @return 登録済チェックイン情報
      */
     public CheckInEntityBean checkIn(String userId, int placeId) {
-        CheckInEntity entity = new CheckInEntity(0, userId, placeId, new Date(), false);
+        CheckInEntity entity = new CheckInEntity(0, userId, placeId, null, new Date(), false);
 
         checkInRepository.checkOutByUserId(userId);
-        CheckInEntity registerdEntity = checkInRepository.save(entity);
+        CheckInEntity registeredEntity = checkInRepository.save(entity);
 
-        return new CheckInEntityBean(registerdEntity);
+        return new CheckInEntityBean(registeredEntity);
+    }
+
+    /**
+     * チェックインする.宅ボドゲの場合を想定.
+     * @param userId チェックインユーザID
+     * @param checkInUserId チェックイン先ユーザID.
+     * @return 登録済みチェックイン情報
+     */
+    public CheckInEntityBean checkInAtUserHome(String userId, String checkInUserId) {
+        CheckInEntity entity = new CheckInEntity(0, userId, -1, checkInUserId, new Date(), false);
+
+        checkInRepository.checkOutByUserId(userId);
+        CheckInEntity registeredEntity = checkInRepository.save(entity);
+
+        return new CheckInEntityBean(registeredEntity);
     }
 
     /**
