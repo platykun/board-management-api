@@ -39,6 +39,11 @@ public class ResultResponseBean {
     private String placeName;
 
     /**
+     * イベントID.
+     */
+    private Integer eventId;
+
+    /**
      * 作成日.
      */
     private Date create;
@@ -56,6 +61,7 @@ public class ResultResponseBean {
         this.placeId = result.getPlaceId();
         this.placeName = result.getPlaceName();
         this.create = result.getCreate();
+        this.eventId = result.getEventId();
         this.userList = userResultResultList
                 .stream()
                 .map(UserResultResponseBean::new)

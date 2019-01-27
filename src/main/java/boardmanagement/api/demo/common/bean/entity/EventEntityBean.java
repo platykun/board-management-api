@@ -77,7 +77,8 @@ public class EventEntityBean {
                     this.placeName,
                     simpleDateFormat.parse(this.date_time_from),
                     simpleDateFormat.parse(this.date_time_to),
-                    this.comment
+                    this.comment,
+                    null
                     );
         } catch (ParseException e) {
             throw new IllegalArgumentException();

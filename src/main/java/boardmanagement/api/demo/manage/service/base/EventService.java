@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -127,4 +128,21 @@ public class EventService {
 
         return new EventDetailDto(eventEntityBean, joinUserList, resultEntityList);
     }
+
+    /**
+     * 引数のユーザが現在参加になっているイベントを検索する.
+     * 多重登録になっている場合、どちらかが反映される.
+     * @param userId ユーザID
+     * @return 参加中のイベント情報
+     */
+    public EventEntityBean findJoiningEvent(String userId) {
+        List<EventEntity> results = eventRepository.findAllValidEvent(userId, new Date());
+
+        // 存在しない場合は空を返却
+        if(results.isEmpty())return null;
+
+        // 検索された値のうち、一つ目を返却
+        return new EventEntityBean(results.get(0));
+    }
+
 }

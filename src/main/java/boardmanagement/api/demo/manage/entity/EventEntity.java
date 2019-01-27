@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * イベントテーブル.
@@ -47,4 +48,8 @@ public class EventEntity {
      * コメント.
      */
     private String comment;
+
+    @OneToMany
+    @JoinColumn(name="eventId")
+    private List<JoinEventEntity> joinEvent;
 }

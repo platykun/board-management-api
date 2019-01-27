@@ -89,4 +89,16 @@ public class EventController {
         var result = eventService.joinEvent(eventId, userId);
         return new SuccessBean<>(result);
     }
+
+    /**
+     * ログインユーザの参加中の判定となるイベントを取得する.
+     * @return 参加中のイベント情報
+     */
+    @GetMapping("/users/events/joining")
+    public SuccessBean<EventEntityBean> joiningEvent() {
+        var userEntityBean = appUserService.findLoginUserFronSession();
+        var userId = userEntityBean.getId();
+        var result = eventService.findJoiningEvent(userId);
+        return new SuccessBean<>(result);
+    }
 }
