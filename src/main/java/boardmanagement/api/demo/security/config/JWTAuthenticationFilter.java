@@ -103,12 +103,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         });
 
         // TODO: リクエストヘッダーにトークンを埋め込まない場合、この処理は不要のため削除すること.
+        Date expire = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
         String token = Jwts.builder()
                 .setSubject(((User)auth.getPrincipal()).getUsername() + authorities.toString())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(expire)
                 .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
                 .compact();
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+        res.addHeader(HEADER_EXPIRE, expire.toString());
 
 
         HttpOutputMessage outputMessage = new ServletServerHttpResponse(res);

@@ -1,5 +1,6 @@
 package boardmanagement.api.demo.security.config;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,16 +49,18 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         // AuthorizationヘッダのBearer Prefixである場合
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        try {
+            UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch(ExpiredJwtException e) {
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
-
-
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) throws ExpiredJwtException {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
             // parse the token.
