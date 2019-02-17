@@ -3,7 +3,7 @@ package boardmanagement.api.demo.manage.controller;
 import boardmanagement.api.demo.common.bean.SuccessBean;
 import boardmanagement.api.demo.common.bean.entity.*;
 import boardmanagement.api.demo.manage.service.base.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserCheckInController {
 
     /**
@@ -27,12 +28,6 @@ public class UserCheckInController {
      */
     private final
     CheckInService checkInService;
-
-    @Autowired
-    public UserCheckInController(AppUserService userService, CheckInService checkInService) {
-        this.userService = userService;
-        this.checkInService = checkInService;
-    }
 
     /**
      * チェックインする.チェックイン中のものがあればチェックアウトする.

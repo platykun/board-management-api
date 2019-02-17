@@ -3,7 +3,8 @@ package boardmanagement.api.demo.manage.service.base;
 import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
 import boardmanagement.api.demo.manage.entity.PlaceEntity;
 import boardmanagement.api.demo.manage.repository.PlaceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,15 +19,12 @@ import java.util.stream.Collectors;
  * 場所サービスクラス.
  */
 @Service
+@RequiredArgsConstructor
 public class PlaceService {
     private static final int FIND_LIMIT = 100;
 
-    @Autowired
+    @NonNull
     private PlaceRepository placeRepository;
-
-    public PlaceService(PlaceRepository placeRepository) {
-        this.placeRepository = placeRepository;
-    }
 
     /**
      * 場所を登録する.

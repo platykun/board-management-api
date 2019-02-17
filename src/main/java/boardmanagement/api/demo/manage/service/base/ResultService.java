@@ -9,7 +9,8 @@ import boardmanagement.api.demo.manage.entity.ResultEntity;
 import boardmanagement.api.demo.manage.entity.UserResultEntity;
 import boardmanagement.api.demo.manage.repository.ResultRepository;
 import boardmanagement.api.demo.manage.repository.UserResultRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +23,14 @@ import java.util.stream.Collectors;
  * 結果情報サービスクラス.
  */
 @Service
+@RequiredArgsConstructor
 public class ResultService {
     private static final int FIND_LIMIT = 20;
 
-    @Autowired
+    @NonNull
     ResultRepository resultRepository;
 
-    @Autowired
+    @NonNull
     UserResultRepository userResultRepository;
 
     /**

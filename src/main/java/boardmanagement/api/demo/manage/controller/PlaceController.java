@@ -5,7 +5,7 @@ import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
 import boardmanagement.api.demo.manage.bean.request.PlaceRequestBean;
 import boardmanagement.api.demo.manage.service.base.PlaceService;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +15,7 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class PlaceController {
 
     /**
@@ -24,10 +25,6 @@ public class PlaceController {
     private final
     PlaceService placeService;
 
-    @Autowired
-    public PlaceController(PlaceService placeService) {
-        this.placeService = placeService;
-    }
 
     /**
      * 場所を作成する.
@@ -46,7 +43,7 @@ public class PlaceController {
      * 場所を更新する.
      *
      * @param placeUpdateRequestBean 更新情報
-     * @param placeId 場所ID
+     * @param placeId                場所ID
      * @return 更新結果情報
      */
     @PutMapping("/user/places/{placeId:^[0-9]+$}")

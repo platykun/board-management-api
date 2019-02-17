@@ -5,7 +5,7 @@ import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
 import boardmanagement.api.demo.manage.bean.request.UserIconUpdateRequestBean;
 import boardmanagement.api.demo.manage.bean.request.UserRequestBean;
 import boardmanagement.api.demo.manage.service.base.AppUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +18,7 @@ import static boardmanagement.api.demo.security.config.SecurityConstants.SIGNUP_
  */
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class UserController {
     // TODO: パスワード更新とかやる
 
@@ -27,11 +28,6 @@ public class UserController {
      */
     private final
     AppUserService userService;
-
-    @Autowired
-    public UserController(AppUserService userService) {
-        this.userService = userService;
-    }
 
 
     /**

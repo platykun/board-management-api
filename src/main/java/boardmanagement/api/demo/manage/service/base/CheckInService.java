@@ -3,7 +3,8 @@ package boardmanagement.api.demo.manage.service.base;
 import boardmanagement.api.demo.common.bean.entity.CheckInEntityBean;
 import boardmanagement.api.demo.manage.entity.CheckInEntity;
 import boardmanagement.api.demo.manage.repository.CheckInRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +19,11 @@ import java.util.stream.Collectors;
  * チェックインサービスクラス.
  */
 @Service
+@RequiredArgsConstructor
 public class CheckInService {
     private static final int FIND_LIMIT = 20;
 
-    @Autowired
+    @NonNull
     CheckInRepository checkInRepository;
 
     /**

@@ -1,7 +1,7 @@
-package boardmanagement.api.demo.manage.bean.response;
+package boardmanagement.api.demo.usecase.bean.response;
 
 import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
-import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
+import boardmanagement.api.demo.usecase.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.entity.ResultEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package boardmanagement.api.demo.manage.dto;
+package boardmanagement.api.demo.usecase.dto;
 
 import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
 import boardmanagement.api.demo.manage.entity.ResultEntity;

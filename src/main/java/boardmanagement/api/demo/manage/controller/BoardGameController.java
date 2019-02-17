@@ -5,7 +5,7 @@ import boardmanagement.api.demo.common.bean.entity.BoardGameEntityBean;
 import boardmanagement.api.demo.manage.bean.request.BoardGameRequestBean;
 import boardmanagement.api.demo.manage.service.base.BoardGameService;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +15,7 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class BoardGameController {
 
     /**
@@ -24,10 +25,6 @@ public class BoardGameController {
     private final
     BoardGameService boardGameService;
 
-    @Autowired
-    public BoardGameController(BoardGameService boardGameService) {
-        this.boardGameService = boardGameService;
-    }
 
     /**
      * ボードゲームを作成する.

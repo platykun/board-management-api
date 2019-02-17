@@ -9,7 +9,8 @@ import boardmanagement.api.demo.manage.entity.EventEntity;
 import boardmanagement.api.demo.manage.entity.JoinEventEntity;
 import boardmanagement.api.demo.manage.repository.EventRepository;
 import boardmanagement.api.demo.manage.repository.JoinEventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,28 +24,25 @@ import java.util.stream.Collectors;
  * イベント管理サービスクラス.
  */
 @Service
+@RequiredArgsConstructor
 public class EventService {
     private static final int FIND_LIMIT = 20;
 
+    @NonNull
     private final
     EventRepository eventRepository;
 
+    @NonNull
     private final
     JoinEventRepository joinEventRepository;
 
+    @NonNull
     private final
     ResultService resultService;
 
+    @NonNull
     private final
     AppUserService appUserService;
-
-    @Autowired
-    public EventService(EventRepository eventRepository, JoinEventRepository joinEventRepository, ResultService resultService, AppUserService appUserService) {
-        this.eventRepository = eventRepository;
-        this.joinEventRepository = joinEventRepository;
-        this.resultService = resultService;
-        this.appUserService = appUserService;
-    }
 
     /**
      * イベントの一覧を取得する.
@@ -67,7 +65,7 @@ public class EventService {
      */
     public EventEntityBean createEvent(EventEntityBean event) {
         // idが0では無い場合、例外を発砲する.
-        if(event.getId() != 0) throw new IllegalArgumentException();
+        if (event.getId() != 0) throw new IllegalArgumentException();
 
         EventEntity result = eventRepository.save(event.toEntity());
 
@@ -76,12 +74,13 @@ public class EventService {
 
     /**
      * イベントを更新する.
+     *
      * @param event イベント情報
      * @return 更新結果
      */
     public EventEntityBean updateEvent(int eventId, EventEntityBean event) {
         // eventIdとEventEntityBeanのIDが一致しない場合例外を発砲する.
-        if(eventId != event.getId()) throw new IllegalArgumentException();
+        if (eventId != event.getId()) throw new IllegalArgumentException();
 
         EventEntity result = eventRepository.save(event.toEntity());
         return new EventEntityBean(result);
@@ -132,6 +131,7 @@ public class EventService {
     /**
      * 引数のユーザが現在参加になっているイベントを検索する.
      * 多重登録になっている場合、どちらかが反映される.
+     *
      * @param userId ユーザID
      * @return 参加中のイベント情報
      */
@@ -139,7 +139,7 @@ public class EventService {
         List<EventEntity> results = eventRepository.findAllValidEvent(userId, new Date());
 
         // 存在しない場合は空を返却
-        if(results.isEmpty())return null;
+        if (results.isEmpty()) return null;
 
         // 検索された値のうち、一つ目を返却
         return new EventEntityBean(results.get(0));

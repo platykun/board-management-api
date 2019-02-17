@@ -8,7 +8,7 @@ import boardmanagement.api.demo.manage.bean.response.ResultResponseBean;
 import boardmanagement.api.demo.manage.bean.response.UserResultResponseBean;
 import boardmanagement.api.demo.manage.service.base.ResultService;
 import boardmanagement.api.demo.manage.service.base.AppUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class ResultController {
 
     /**
@@ -32,20 +33,14 @@ public class ResultController {
     private final
     ResultService resultService;
 
-    @Autowired
-    public ResultController(AppUserService userService, ResultService resultService) {
-        this.userService = userService;
-        this.resultService = resultService;
-    }
-
     /**
      * 結果を記録する.
      *
      * @param resultRequestBean 結果登録情報
      * @return 登録結果
      */
-    @PutMapping(path="/user/result")
-    SuccessBean<ResultResponseBean> result(@RequestBody ResultRequestBean resultRequestBean){
+    @PutMapping(path = "/user/result")
+    SuccessBean<ResultResponseBean> result(@RequestBody ResultRequestBean resultRequestBean) {
 
         ResultResponseBean bean = resultService.register(resultRequestBean.toResultDto());
         return new SuccessBean<>(bean);
@@ -55,11 +50,11 @@ public class ResultController {
      * ユーザごとの結果を記録する.
      *
      * @param userResultRequestBean 結果登録情報
-     * @param resultId ID
+     * @param resultId              ID
      * @return 登録結果
      */
-    @PutMapping(path="/user/result/{resultId:^[0-9]+$}/users")
-    SuccessBean<UserResultResponseBean> userResultNew(@RequestBody UserResultRequestBean userResultRequestBean, @PathVariable int resultId){
+    @PutMapping(path = "/user/result/{resultId:^[0-9]+$}/users")
+    SuccessBean<UserResultResponseBean> userResultNew(@RequestBody UserResultRequestBean userResultRequestBean, @PathVariable int resultId) {
 
         UserResultResponseBean bean = resultService.registUserResult(resultId, userResultRequestBean.toResultDto());
 
@@ -70,13 +65,13 @@ public class ResultController {
      * ユーザごとの結果を更新する.
      *
      * @param userResultRequestBean 結果登録情報
-     * @param resultId 結果ID
-     * @param userId ユーザID
+     * @param resultId              結果ID
+     * @param userId                ユーザID
      * @return 登録結果
      */
-    @PutMapping(path="/user/result/{resultId:^[0-9]+$}/users/{userId:^[a-zA-Z0-9]+$}")
+    @PutMapping(path = "/user/result/{resultId:^[0-9]+$}/users/{userId:^[a-zA-Z0-9]+$}")
     SuccessBean<UserResultResponseBean> userResultUpdate(@RequestBody UserResultRequestBean userResultRequestBean,
-                                                         @PathVariable("userId") String userId, @PathVariable("resultId") int resultId){
+                                                         @PathVariable("userId") String userId, @PathVariable("resultId") int resultId) {
         UserResultResponseBean bean = resultService.updateUserResult(resultId, userId, userResultRequestBean.toResultDto());
 
         return new SuccessBean<>(bean);
@@ -86,11 +81,11 @@ public class ResultController {
      * ユーザごとの結果を削除する.
      *
      * @param resultId 結果ID
-     * @param userId ユーザID
+     * @param userId   ユーザID
      * @return 削除結果
      */
-    @DeleteMapping(path="/user/result/{resultId:^[0-9]+$}/users/{userId:^[a-zA-Z0-9]+$}")
-    SuccessBean<Boolean> userResultDelete(@PathVariable int resultId, @PathVariable String userId){
+    @DeleteMapping(path = "/user/result/{resultId:^[0-9]+$}/users/{userId:^[a-zA-Z0-9]+$}")
+    SuccessBean<Boolean> userResultDelete(@PathVariable int resultId, @PathVariable String userId) {
         Boolean result = resultService.deleteUserResult(resultId, userId);
 
         return new SuccessBean<>(result);
@@ -98,10 +93,11 @@ public class ResultController {
 
     /**
      * ログインユーザの結果履歴を取得する.
+     *
      * @param page ページング
      * @return 結果履歴
      */
-    @GetMapping(path="/user/histories/me")
+    @GetMapping(path = "/user/histories/me")
     public SuccessBean<List<ResultResponseBean>> resultHistory(
             @RequestParam(name = "page", required = false) Integer page
     ) {
@@ -113,10 +109,11 @@ public class ResultController {
 
     /**
      * 記録IDから記録情報を取得する.
+     *
      * @param id 記録id.
      * @return 記録情報
      */
-    @GetMapping(path="/user/histories/{id:^[0-9]+$}")
+    @GetMapping(path = "/user/histories/{id:^[0-9]+$}")
     public SuccessBean<ResultResponseBean> getResultById(@PathVariable int id) {
         ResultResponseBean resultHistory = resultService.findResultsByResultId(id);
 

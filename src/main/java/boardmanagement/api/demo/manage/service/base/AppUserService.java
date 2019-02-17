@@ -7,7 +7,7 @@ import boardmanagement.api.demo.manage.entity.AppUserEntity;
 import boardmanagement.api.demo.manage.repository.PasswordRepository;
 import boardmanagement.api.demo.manage.repository.AppUserRepository;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +24,7 @@ import java.util.Optional;
  * ユーザサービスクラス.
  */
 @Service
+@RequiredArgsConstructor
 public class AppUserService {
     private static final int FIND_LIMIT = 100;
 
@@ -36,13 +37,6 @@ public class AppUserService {
     @NonNull
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public AppUserService(AppUserRepository appUserRepository, PasswordRepository passwordRepository, PasswordEncoder passwordEncoder) {
-        this.appUserRepository = appUserRepository;
-        this.passwordRepository = passwordRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     /**
      * セッション情報からログインユーザを取得する.
      * ログインユーザが取得できなかった場合、IllegalArgumentExcepiton.
@@ -52,9 +46,9 @@ public class AppUserService {
      */
     public UserEntityBean findLoginUserFronSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = (String) authentication.getPrincipal();
+        String userId = (String) authentication.getPrincipal();
 
-        Optional<UserEntityBean> loginUser = appUserRepository.findById(userName).map(UserEntityBean::new);
+        Optional<UserEntityBean> loginUser = appUserRepository.findById(userId).map(UserEntityBean::new);
         if(!loginUser.isPresent()){
             throw new IllegalArgumentException("cant find login user");
         }

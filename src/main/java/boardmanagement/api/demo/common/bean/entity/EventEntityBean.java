@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * イベントテーブルBeanクラス.
@@ -47,9 +48,10 @@ public class EventEntityBean {
 
     /**
      * コンストラクタ
+     *
      * @param entity イベントエンティティ
      */
-    public EventEntityBean(EventEntity entity){
+    public EventEntityBean(EventEntity entity) {
         // simpleDateFormatはスレッドセーフでは無いため毎回newして利用する.
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -70,18 +72,24 @@ public class EventEntityBean {
         // simpleDateFormatはスレッドセーフでは無いため毎回newして利用する.
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+        // イベントの開始終了日付をparseする。
+        Date dateTimeFrom = null;
+        Date dateTimeTo = null;
         try {
-            return new EventEntity(
-                    this.id,
-                    this.placeId,
-                    this.placeName,
-                    simpleDateFormat.parse(this.date_time_from),
-                    simpleDateFormat.parse(this.date_time_to),
-                    this.comment,
-                    null
-                    );
+            dateTimeFrom = simpleDateFormat.parse(this.date_time_from);
+            dateTimeTo = simpleDateFormat.parse(this.date_time_to);
         } catch (ParseException e) {
-            throw new IllegalArgumentException();
+            e.printStackTrace();
         }
+
+        return new EventEntity(
+                this.id,
+                this.placeId,
+                this.placeName,
+                dateTimeFrom,
+                dateTimeTo,
+                this.comment,
+                null
+        );
     }
 }

@@ -1,13 +1,13 @@
-package boardmanagement.api.demo.manage.service;
+package boardmanagement.api.demo.usecase.service;
 
 import boardmanagement.api.demo.common.bean.entity.CheckInEntityBean;
 import boardmanagement.api.demo.common.bean.entity.PlaceEntityBean;
 import boardmanagement.api.demo.common.bean.entity.UserEntityBean;
-import boardmanagement.api.demo.manage.dto.UserStatusResponseDto;
+import boardmanagement.api.demo.usecase.dto.UserStatusResponseDto;
 import boardmanagement.api.demo.manage.entity.ResultEntity;
 import boardmanagement.api.demo.manage.service.base.*;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,24 +17,21 @@ import java.util.Optional;
  * ユーザステータス情報取得サービスクラス.
  */
 @Service
+@RequiredArgsConstructor
 public class StatusService {
 
     @NonNull
     private CheckInService checkInService;
 
-    @Autowired
+    @NonNull
     private AppUserService userService;
 
-    @Autowired
+    @NonNull
     private PlaceService placeService;
 
-    @Autowired
+    @NonNull
     private ResultService resultService;
 
-    @Autowired
-    public StatusService(CheckInService checkInService) {
-        this.checkInService = checkInService;
-    }
 
     /**
      * ログインユーザのステータス情報を取得する.

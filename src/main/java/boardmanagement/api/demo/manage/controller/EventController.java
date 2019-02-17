@@ -6,8 +6,9 @@ import boardmanagement.api.demo.common.bean.entity.JoinEventEntityBean;
 import boardmanagement.api.demo.manage.dto.EventDetailDto;
 import boardmanagement.api.demo.manage.service.base.AppUserService;
 import boardmanagement.api.demo.manage.service.base.EventService;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.var;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,15 +18,17 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class EventController {
-    @Autowired
+    @NonNull
     EventService eventService;
 
-    @Autowired
+    @NonNull
     AppUserService appUserService;
 
     /**
      * イベントの一覧を取得する.
+     *
      * @return イベント一覧情報
      */
     @GetMapping("/events")
@@ -40,6 +43,7 @@ public class EventController {
 
     /**
      * イベントの詳細情報を取得する.
+     *
      * @param eventId イベントID
      * @return イベントの詳細情報
      */
@@ -52,6 +56,7 @@ public class EventController {
 
     /**
      * イベントを作成する.
+     *
      * @param eventEntityBean イベント作成情報
      * @return 作成結果.
      */
@@ -64,7 +69,8 @@ public class EventController {
 
     /**
      * イベントを更新する.
-     * @param eventId イベントID
+     *
+     * @param eventId         イベントID
      * @param eventEntityBean イベント更新情報
      * @return 更新結果.
      */
@@ -78,6 +84,7 @@ public class EventController {
 
     /**
      * イベントに参加する.
+     *
      * @param eventId イベントID
      * @return 結果
      */
@@ -92,6 +99,7 @@ public class EventController {
 
     /**
      * ログインユーザの参加中の判定となるイベントを取得する.
+     *
      * @return 参加中のイベント情報
      */
     @GetMapping("/users/events/joining")
